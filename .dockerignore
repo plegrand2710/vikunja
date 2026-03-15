@@ -15,4 +15,3 @@ docker-manifest-unstable.tmpl
 # Frontend
 /frontend/node_modules/
 /frontend/.direnv
-/frontend/dist

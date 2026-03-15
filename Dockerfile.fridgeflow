@@ -1,0 +1,3 @@
+FROM vikunja/vikunja:latest
+COPY frontend/dist/ /app/vikunja/static/
+EXPOSE 3456
