@@ -71,6 +71,15 @@
 						{{ $t('team.title') }}
 					</RouterLink>
 				</li>
+				<li>
+					<RouterLink
+						v-shortcut="'KeyG KeyF'"
+						:to="{ name: 'meal-planner'}"
+					>
+						<span class="menu-item-icon icon">🍽️</span>
+						FridgeFlow
+					</RouterLink>
+					</li>
 			</menu>
 		</nav>
 

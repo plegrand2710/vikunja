@@ -44,6 +44,14 @@ const router = createRouter({
 			component: () => import('@/views/Home.vue'),
 		},
 		{
+			path: '/meal-planner',
+			name: 'meal-planner',
+			component: () => import('@/views/MealPlanner.vue'),
+			meta: {
+				title: 'FridgeFlow — Meal Planner',
+			},
+		},
+		{
 			path: '/:pathMatch(.*)*',
 			name: 'not-found',
 			component: NotFoundComponent,
