@@ -227,6 +227,10 @@ function getBuildConfig(env: Record<string, string>) {
 					find: '@',
 					replacement: pathSrc,
 				},
+				{
+					find: 'stream',
+					replacement: 'stream-browserify',
+				},
 			],
 			extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
 		},

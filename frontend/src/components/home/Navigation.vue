@@ -79,7 +79,16 @@
 						<span class="menu-item-icon icon">🍽️</span>
 						FridgeFlow
 					</RouterLink>
-					</li>
+				</li>
+				<li>
+					<RouterLink
+						v-shortcut="'KeyG KeyC'"
+						:to="{ name: 'calendar'}"
+					>
+						<span class="menu-item-icon icon">📅</span>
+						Calendrier
+					</RouterLink>
+				</li>
 			</menu>
 		</nav>
 

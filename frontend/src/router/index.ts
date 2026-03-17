@@ -52,6 +52,14 @@ const router = createRouter({
 			},
 		},
 		{
+			path: '/calendar',
+			name: 'calendar',
+			component: () => import('@/views/CalendarView.vue'),
+			meta: {
+				title: 'Calendrier',
+			},
+		},
+		{
 			path: '/:pathMatch(.*)*',
 			name: 'not-found',
 			component: NotFoundComponent,
