@@ -369,6 +369,11 @@
 		</div>
 	</Card>
 
+<Card :title="'⚙️ Valeurs par défaut des tâches'" class="general-settings mt-4">
+  <TaskDefaultsSettings />
+</Card>
+
+
 	<div class="sticky-save">
 		<CustomTransition name="fade">
 			<XButton
@@ -399,6 +404,7 @@ import CustomTransition from '@/components/misc/CustomTransition.vue'
 import {SUPPORTED_LOCALES} from '@/i18n'
 import {createRandomID} from '@/helpers/randomId'
 import {AuthenticatedHTTPFactory} from '@/helpers/fetcher'
+import TaskDefaultsSettings from '@/components/settings/TaskDefaultsSettings.vue'
 import {formatDisplayDateFormat} from '@/helpers/time/formatDate'
 
 import {useTitle} from '@/composables/useTitle'

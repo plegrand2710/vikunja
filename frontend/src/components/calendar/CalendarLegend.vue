@@ -5,7 +5,7 @@
 			:key="source.id"
 			class="cal-legend__item"
 			:class="{ 'is-disabled': !source.enabled }"
-			@click="store.toggleSource(source.id)"
+			@click="handleToggleSource(source.id)"
 		>
 			<span
 				class="cal-legend__dot"
@@ -31,8 +31,15 @@
 
 <script lang="ts" setup>
 import { useCalendarStore } from '@/stores/calendar'
+import { useVikunjaSettings } from '@/composables/useVikunjaSettings'
 
 const store = useCalendarStore()
+const vikunjaSettings = useVikunjaSettings()
+
+function handleToggleSource(id: Parameters<typeof store.toggleSource>[0]) {
+  store.toggleSource(id)
+  vikunjaSettings.saveSources()
+}
 
 function formatSyncTime(isoDate: string): string {
 	const diff = Math.floor((Date.now() - new Date(isoDate).getTime()) / 1000 / 60)

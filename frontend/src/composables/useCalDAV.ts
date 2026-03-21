@@ -10,7 +10,7 @@
  */
 
 import { ref } from 'vue'
-import { createDAVClient } from 'tsdav'
+import { DAVClient } from 'tsdav'
 import type { DAVCalendar, DAVObject } from 'tsdav'
 import { useCalendarStore } from '@/stores/calendar'
 import type { CalendarEvent, EventSource } from '@/stores/calendar'
@@ -201,7 +201,7 @@ export function useCalDAV() {
 			throw new Error('Configuration CalDAV manquante. Configure l\'URL et les credentials dans les paramètres.')
 		}
 
-		return createDAVClient({
+		const client = new DAVClient({
 			serverUrl: store.caldavConfig.url,
 			credentials: {
 				username: store.caldavConfig.username,
@@ -210,6 +210,8 @@ export function useCalDAV() {
 			authMethod: 'Basic',
 			defaultAccountType: 'caldav',
 		})
+		await client.login()
+		return client
 	}
 
 	/** Wrapper loading + erreur */

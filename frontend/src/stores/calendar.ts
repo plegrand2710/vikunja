@@ -7,7 +7,7 @@
  * - Les filtres et préférences d'affichage
  * - La persistance via localStorage
  */
-
+import { generateUUID } from '@/utils/uuid'
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
@@ -111,7 +111,10 @@ export const DEFAULT_MEAL_TIMES = {
 // ─────────────────────────────────────────────
 
 function generateId(): string {
-	return crypto.randomUUID()
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return generateUUID()
+  }
+  return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).substring(2, 11)
 }
 
 function loadFromStorage<T>(key: string, fallback: T): T {
@@ -357,14 +360,14 @@ export const useCalendarStore = defineStore('calendar', () => {
 	}
 
     function addSubscription(sub: Omit<CalendarSubscription, 'id'>): CalendarSubscription {
-    const newSub: CalendarSubscription = {
-        ...sub,
-        id: crypto.randomUUID(),
-    }
-    subscriptions.value.push(newSub)
-    saveToStorage('calendar_subscriptions', subscriptions.value)
-    return newSub
-    }
+		const newSub: CalendarSubscription = {
+			...sub,
+			id: generateId(),
+		}
+		subscriptions.value = [...subscriptions.value, newSub]
+		saveToStorage('calendar_subscriptions', subscriptions.value)
+		return newSub
+	}
     
     function updateSubscription(id: string, updates: Partial<CalendarSubscription>): void {
     const index = subscriptions.value.findIndex(s => s.id === id)
@@ -398,7 +401,12 @@ export const useCalendarStore = defineStore('calendar', () => {
     }
     }
 
-	// ── RETURN ─────────────────────────────────
+	function setSubscriptions(newSubs: CalendarSubscription[]): void {
+    subscriptions.value = newSubs
+    saveToStorage('calendar_subscriptions', subscriptions.value)
+  }
+
+// ── RETURN ─────────────────────────────────
 
 	return {
 		// State
@@ -465,5 +473,6 @@ export const useCalendarStore = defineStore('calendar', () => {
         openSubscriptionModal,
         closeSubscriptionModal,
         updateSubscriptionStatus,
+        setSubscriptions,
 	}
 })

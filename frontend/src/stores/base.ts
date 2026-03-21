@@ -11,6 +11,7 @@ import {checkAndSetApiUrl, ERROR_NO_API_URL, InvalidApiUrlProvidedError, NoApiUr
 import {useMenuActive} from '@/composables/useMenuActive'
 
 import {useAuthStore} from '@/stores/auth'
+import {useVikunjaSettings} from '@/composables/useVikunjaSettings'
 import router from '@/router'
 import type {IProject} from '@/modelTypes/IProject'
 import type {Permission} from '@/constants/permissions'
@@ -148,6 +149,10 @@ export const useBaseStore = defineStore('base', () => {
 		try {
 			await checkAndSetApiUrl(window.API_URL)
 			await authStore.checkAuth()
+    if (authStore.isAuthenticated) {
+      const vikunjaSettings = useVikunjaSettings()
+      vikunjaSettings.loadFromVikunja()
+    }
 			await router.isReady()
 			ready.value = true
 		} catch (e: unknown) {

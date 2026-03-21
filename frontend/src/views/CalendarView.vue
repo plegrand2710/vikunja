@@ -43,6 +43,7 @@
 		<CalendarSubscriptions
 			:is-open="showSubscriptions"
 			@close="showSubscriptions = false"
+			@refresh="calendarRef?.getApi().refetchEvents()"
 		/>
 	</div>
 </template>
@@ -124,7 +125,9 @@ const calendarOptions = computed<CalendarOptions>(() => ({
 	weekNumberFormat: { week: 'numeric' },
 
 	// Événements
-	events: sources.fullCalendarEvents.value,
+	events: (fetchInfo, successCallback) => {
+		successCallback(sources.fullCalendarEvents.value)
+	},
 
 	// Callbacks de navigation (pour mettre à jour le titre)
 	datesSet: (info) => {
@@ -167,11 +170,6 @@ const calendarOptions = computed<CalendarOptions>(() => ({
 watch(() => store.viewMode, (mode) => {
 	calendarRef.value?.getApi().changeView(mode)
 })
-
-// Recharger les événements quand les sources actives changent
-watch(() => store.activeSources, () => {
-	calendarRef.value?.getApi().refetchEvents()
-}, { deep: true })
 
 // ── Handlers FullCalendar ─────────────────────
 

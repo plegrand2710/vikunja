@@ -6,7 +6,7 @@
  * - computed() → valeur calculée automatiquement depuis d'autres refs
  * - defineStore() → crée un store Pinia accessible partout dans l'app
  */
-
+import { generateUUID } from '@/utils/uuid'
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
@@ -147,7 +147,7 @@ export const DIET_LABELS: Record<DietType, string> = {
 
 /** Génère un UUID simple */
 function generateId(): string {
-	return crypto.randomUUID()
+	return generateUUID()
 }
 
 /** Retourne la date du lundi de la semaine courante au format ISO */

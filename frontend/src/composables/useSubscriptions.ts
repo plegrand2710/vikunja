@@ -10,7 +10,7 @@ import { SOURCE_COLORS } from '@/stores/calendar'
 
 // ── Proxy ICS ─────────────────────────────────
 
-const ICS_PROXY_BASE = `http://82.67.177.75:9090/ics-proxy`
+const ICS_PROXY_BASE = `${window.location.origin}/ics-proxy`
 
 const ICS_DOMAIN_MAP: Record<string, string> = {
   'ical.aimaira.com':      'aimaira',

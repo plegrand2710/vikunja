@@ -28,6 +28,10 @@ const PREFIXED_SCSS_STYLES = `@use "sass:math";
 */
 function getSentryConfig(env: ImportMetaEnv): SentryVitePluginOptions {
 	return {
+    optimizeDeps: {
+      include: ['tsdav', 'xml-js'],
+      esbuildOptions: { target: 'esnext' },
+    },
 		// keep these flags for easier debugging
 		disable: true,
 		debug: true, // print information about which files end up being uploaded
@@ -104,6 +108,10 @@ export default defineConfig(({command, mode}) => {
 
 function getBuildConfig(env: Record<string, string>) {
 	return {
+    optimizeDeps: {
+      include: ['tsdav', 'xml-js'],
+      esbuildOptions: { target: 'esnext' },
+    },
 		base: env.VIKUNJA_FRONTEND_BASE,
 		// https://vitest.dev/config/
 		test: {
@@ -231,6 +239,10 @@ function getBuildConfig(env: Record<string, string>) {
 					find: 'stream',
 					replacement: 'stream-browserify',
 				},
+				{
+					find: 'events',
+					replacement: 'events',
+				},
 			],
 			extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
 		},
@@ -245,18 +257,33 @@ function getBuildConfig(env: Record<string, string>) {
 				sentry: ['./src/sentry.ts', '@sentry/*'],
 			},
 		},
+		optimizeDeps: {
+			exclude: ['tsdav'],
+		},
 		build: {
 			target: 'esnext',
 			// required for sentry debugging: tells vite to create source maps
-			sourcemap: Boolean(env.SENTRY_AUTH_TOKEN),
+			sourcemap: true,
 			rollupOptions: {
+				output: {
+					chunkFileNames: (chunkInfo) => {
+					const name = chunkInfo.name.startsWith('__')
+						? chunkInfo.name.replace(/^__/, 'ext-')
+						: chunkInfo.name
+					return `assets/${name}-[hash].js`
+					},
+					entryFileNames: (chunkInfo) => {
+					const name = chunkInfo.name.startsWith('__')
+						? chunkInfo.name.replace(/^__/, 'ext-')
+						: chunkInfo.name
+					return `assets/${name}-[hash].js`
+					},
+				},
 				plugins: [
 					visualizer({
-						filename: 'stats.html',
-						gzipSize: true,
-						// template: 'sunburst',
-						// brotliSize: true,
-					}) as PluginOption,
+				filename: 'stats.html',
+				gzipSize: true,
+			}) as PluginOption,
 				],
 			},
 		},
@@ -268,6 +295,10 @@ function getServeConfig(env: Record<string, string>) {
 	const buildConfig = getBuildConfig(env)
 	// override prod settings with dev settings
 	return {
+    optimizeDeps: {
+      include: ['tsdav', 'xml-js'],
+      esbuildOptions: { target: 'esnext' },
+    },
 		...buildConfig,
 		server: {
 			...buildConfig.server,

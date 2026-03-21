@@ -30,6 +30,7 @@ import {useKanbanStore} from '@/stores/kanban'
 import {useBaseStore} from '@/stores/base'
 import ProjectUserService from '@/services/projectUsers'
 import {useAuthStore} from '@/stores/auth'
+import {useTaskDefaultsStore} from '@/stores/taskDefaults'
 import TaskCollectionService, {type TaskFilterParams} from '@/services/taskCollection'
 import {getRandomColorHex} from '@/helpers/color/randomColor'
 import {REPEAT_TYPES} from '@/types/IRepeatAfter'
@@ -439,13 +440,18 @@ export const useTaskStore = defineStore('task', () => {
 		if(parsedTask.text === '') {
 			const taskService = new TaskService()
 			try {
+				const taskDefaultsStore = useTaskDefaultsStore()
+				const d = taskDefaultsStore.defaults
 				return taskService.create(new TaskModel({
-					title,
-					projectId,
-					bucketId,
-					position,
-					index,
-				}))
+				title,
+				projectId,
+				bucketId,
+				position,
+				index,
+				priority: d.priority ?? 0,
+				dueDate: taskDefaultsStore.buildDueDate(),
+				assignees: d.assignees.map(id => ({ id })),
+			}))
 			} finally {
 				cancel()
 			}
@@ -475,12 +481,14 @@ export const useTaskStore = defineStore('task', () => {
 		// I don't know why, but it all goes up in flames when I just pass in the date normally.
 		const dueDate = parsedTask.date !== null ? new Date(parsedTask.date).toISOString() : null
 	
-		const task = new TaskModel({
+		const taskDefaultsStore = useTaskDefaultsStore()
+			const d = taskDefaultsStore.defaults
+			const task = new TaskModel({
 			title: cleanedTitle,
 			projectId: foundProjectId,
-			dueDate,
-			priority: parsedTask.priority,
-			assignees,
+			dueDate: dueDate ?? taskDefaultsStore.buildDueDate(),
+			priority: parsedTask.priority || d.priority || 0,
+			assignees: assignees.length > 0 ? assignees : d.assignees.map(id => ({ id })),
 			bucketId: bucketId || 0,
 			position,
 			index,
@@ -494,10 +502,27 @@ export const useTaskStore = defineStore('task', () => {
 		const taskService = new TaskService()
 		try {
 			const createdTask = await taskService.create(task)
-			return await addLabelsToTask({
+			const taskDefaultsStore = useTaskDefaultsStore()
+			const d = taskDefaultsStore.defaults
+			// Ajouter les étiquettes par défaut directement via leur ID
+			const result = await addLabelsToTask({
 				task: createdTask,
 				parsedLabels: parsedTask.labels,
 			})
+
+			// Ajouter les étiquettes par défaut via leur ID directement
+			if (d.labels.length > 0) {
+				const labelService = new LabelTaskService()
+				for (const labelId of d.labels) {
+					await labelService.create(new LabelTaskModel({
+					taskId: result.id,
+					labelId,
+					}))
+				}
+			}
+
+			return result
+			
 		} finally {
 			cancel()
 		}

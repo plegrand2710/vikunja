@@ -9,7 +9,7 @@
  * SÉCURITÉ : la clé API est lue depuis import.meta.env.VITE_ANTHROPIC_API_KEY
  * Elle ne doit JAMAIS être hardcodée ici ni commitée.
  */
-
+import { generateUUID } from '@/utils/uuid'
 import { ref } from 'vue'
 import type {
 	Recipe,
@@ -239,7 +239,7 @@ Format attendu : [{ recette1 }, { recette2 }, { recette3 }]`
 				// Enrichir avec les champs manquants
 				return recipes.map(r => ({
 					...r,
-					id: crypto.randomUUID(),
+					id: generateUUID(),
 					createdAt: new Date().toISOString(),
 					usageCount: 0,
 					lastUsed: null,
@@ -319,7 +319,7 @@ Omet les jours/slots verrouillés de ta réponse.`
 						if (!recipe) continue
 						enriched[day]![slot as MealSlot] = {
 							...recipe,
-							id: crypto.randomUUID(),
+							id: generateUUID(),
 							createdAt: new Date().toISOString(),
 							usageCount: 0,
 							lastUsed: null,
@@ -356,7 +356,7 @@ ${RECIPE_SCHEMA}`
 
 				return {
 					...recipe,
-					id: crypto.randomUUID(),
+					id: generateUUID(),
 					createdAt: new Date().toISOString(),
 					usageCount: 0,
 					lastUsed: null,
@@ -395,7 +395,7 @@ ${RECIPE_SCHEMA}`
 
 				return {
 					...recipe,
-					id: crypto.randomUUID(),
+					id: generateUUID(),
 					createdAt: new Date().toISOString(),
 					usageCount: 0,
 					lastUsed: null,
@@ -438,7 +438,7 @@ Réponds UNIQUEMENT avec un tableau JSON de 3 recettes :
 
 				return recipes.map(r => ({
 					...r,
-					id: crypto.randomUUID(),
+					id: generateUUID(),
 					createdAt: new Date().toISOString(),
 					usageCount: 0,
 					lastUsed: null,

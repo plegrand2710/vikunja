@@ -62,7 +62,7 @@
 								<button
 									class="cal-subs__item-btn"
 									:title="sub.enabled ? 'Désactiver' : 'Activer'"
-									@click="store.updateSubscription(sub.id, { enabled: !sub.enabled })"
+									@click="handleToggle(sub.id, sub.enabled)"
 								>
 									{{ sub.enabled ? '👁️' : '🙈' }}
 								</button>
@@ -305,16 +305,32 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { useCalendarStore } from '@/stores/calendar'
 import { useSubscriptions } from '@/composables/useSubscriptions'
 import type { CalendarSubscription, SubscriptionType } from '@/stores/calendar'
+import { useVikunjaSettings } from '@/composables/useVikunjaSettings'
+import { useCalendarSources } from '@/composables/useCalendarSources'
 
 defineProps<{ isOpen: boolean }>()
-const emit = defineEmits<{ (e: 'close'): void }>()
+const emit = defineEmits<{ (e: 'close'): void; (e: 'refresh'): void }>()
 
 const store = useCalendarStore()
 const subs = useSubscriptions()
+const vikunjaSettings = useVikunjaSettings()
+const calendarSources = useCalendarSources()
+
+let saveTimer: ReturnType<typeof setTimeout> | null = null
+watch(
+  () => store.subscriptions,
+  () => {
+    if (saveTimer) clearTimeout(saveTimer)
+    saveTimer = setTimeout(() => {
+      vikunjaSettings.saveSubscriptions()
+    }, 1000)
+  },
+  { deep: true }
+)
 
 // ── Constantes ────────────────────────────────
 
@@ -400,7 +416,8 @@ function formatSyncTime(isoDate: string): string {
   return `il y a ${Math.floor(diff / 60)}h`
 }
 
-function resetForm() {
+function resetForm()
+{
   showForm.value = false
   editingId.value = null
   testResult.value = null
@@ -440,33 +457,41 @@ function handleDelete(id: string, name: string) {
   }
 }
 
+function handleToggle(id: string, enabled: boolean) {
+  store.updateSubscription(id, { enabled: !enabled })
+}
+
 async function handleTest() {
   testResult.value = await subs.testSubscription({ ...form })
 }
 
-function handleSave() {
-  const subData = {
-    name: form.name,
-    type: form.type,
-    color: form.color,
-    enabled: true,
-    url: form.url || undefined,
-    username: form.username || undefined,
-    password: form.password || undefined,
-    icsUrl: form.icsUrl || undefined,
-    googleClientId: form.googleClientId || undefined,
-    googleClientSecret: form.googleClientSecret || undefined,
-    appleUsername: form.appleUsername || undefined,
-    applePassword: form.applePassword || undefined,
+async function handleSave() {
+  try {
+    const subData = {
+      name: form.name,
+      type: form.type,
+      color: form.color,
+      enabled: true,
+      url: form.url || undefined,
+      username: form.username || undefined,
+      password: form.password || undefined,
+      icsUrl: form.icsUrl || undefined,
+      googleClientId: form.googleClientId || undefined,
+      googleClientSecret: form.googleClientSecret || undefined,
+      appleUsername: form.appleUsername || undefined,
+      applePassword: form.applePassword || undefined,
+    }
+    if (editingId.value) {
+      store.updateSubscription(editingId.value, subData)
+    } else {
+      store.addSubscription(subData)
+    }
+    resetForm()
+    await calendarSources.loadAllSources()
+    emit('refresh')
+  } catch(e) {
+    console.error('[handleSave] ERREUR:', e)
   }
-
-  if (editingId.value) {
-    store.updateSubscription(editingId.value, subData)
-  } else {
-    store.addSubscription(subData)
-  }
-
-  resetForm()
 }
 
 async function copyVdirsyncerConfig() {
