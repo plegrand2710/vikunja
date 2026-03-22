@@ -7,7 +7,7 @@
 				:placeholder="placeholder"
 				class="quick-add__input"
 				@keydown.enter="handleAdd"
-			/>
+			>
 			<button
 				class="quick-add__btn"
 				:disabled="!inputValue.trim()"
@@ -133,11 +133,11 @@ function handleAdd() {
 }
 
 .quick-add__preview-label {
-	color: var(--grey-400, #bbb);
+	color: var(--grey-400, #bbbbbb);
 }
 
 .quick-add__preview-value {
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	font-weight: 500;
 }
 

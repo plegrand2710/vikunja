@@ -300,7 +300,7 @@ export function useCalDAV() {
 			// Chercher le calendrier "Personnel" (local)
 			const personalCal = calendars.find(c =>
 				(c.displayName ?? '').toLowerCase().includes('personnel') ||
-				(c.displayName ?? '').toLowerCase().includes('personal')
+				(c.displayName ?? '').toLowerCase().includes('personal'),
 			) ?? calendars[0]
 
 			if (!personalCal) throw new Error('Aucun calendrier trouvé dans Radicale')

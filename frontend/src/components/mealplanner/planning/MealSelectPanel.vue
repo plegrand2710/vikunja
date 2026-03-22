@@ -62,7 +62,7 @@
 							type="text"
 							placeholder="Rechercher une recette..."
 							class="meal-select-panel__search-input"
-						/>
+						>
 					</div>
 
 					<!-- Contenu -->
@@ -100,7 +100,9 @@
 										{{ '⭐'.repeat(recipe.rating) }}
 									</span>
 								</div>
-								<p class="meal-select-panel__recipe-name">{{ recipe.name }}</p>
+								<p class="meal-select-panel__recipe-name">
+									{{ recipe.name }}
+								</p>
 								<p class="meal-select-panel__recipe-meta">
 									🔥 {{ recipe.calories }} kcal
 									· ⏱ {{ recipe.prepTime + recipe.cookTime }} min
@@ -147,7 +149,9 @@
 										</span>
 										<span class="meal-select-panel__claude-badge">🤖 Claude</span>
 									</div>
-									<p class="meal-select-panel__recipe-name">{{ recipe.name }}</p>
+									<p class="meal-select-panel__recipe-name">
+										{{ recipe.name }}
+									</p>
 									<p class="meal-select-panel__recipe-meta">
 										🔥 {{ recipe.calories }} kcal
 										· ⏱ {{ recipe.prepTime + recipe.cookTime }} min
@@ -221,7 +225,7 @@ const claudeError = ref<string | null>(null)
 // ── COMPUTED ──────────────────────────────────
 
 const dayDiet = computed(() =>
-	store.constraints.days[props.day]?.diet ?? 'all'
+	store.constraints.days[props.day]?.diet ?? 'all',
 )
 
 const slotLabel = computed(() => SLOTS_FR[props.slot])
@@ -328,8 +332,8 @@ function formatDate(dateStr: string): string {
 	position: absolute;
 	inset-block: 0;
 	inset-inline-end: 0;
-	width: min(420px, 100vw);
-	background: var(--white, #fff);
+	inline-size: min(420px, 100vw);
+	background: var(--white, #ffffff);
 	display: flex;
 	flex-direction: column;
 	box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
@@ -343,7 +347,7 @@ function formatDate(dateStr: string): string {
 	align-items: flex-start;
 	justify-content: space-between;
 	padding: 1.25rem 1.25rem 1rem;
-	border-bottom: 1px solid var(--grey-200, #e8e8e8);
+	border-block-end: 1px solid var(--grey-200, #e8e8e8);
 	flex-shrink: 0;
 }
 
@@ -351,12 +355,12 @@ function formatDate(dateStr: string): string {
 	font-size: 1.1rem;
 	font-weight: 700;
 	margin: 0 0 0.2rem;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 }
 
 .meal-select-panel__subtitle {
 	font-size: 0.85rem;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	margin: 0;
 }
 
@@ -367,12 +371,12 @@ function formatDate(dateStr: string): string {
 	cursor: pointer;
 	padding: 0.25rem 0.5rem;
 	border-radius: 6px;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	transition: background 0.15s;
 
 	&:hover {
 		background: var(--grey-100, #f5f5f5);
-		color: var(--text, #333);
+		color: var(--text, #333333);
 	}
 }
 
@@ -380,7 +384,7 @@ function formatDate(dateStr: string): string {
 
 .meal-select-panel__tabs {
 	display: flex;
-	border-bottom: 1px solid var(--grey-200, #e8e8e8);
+	border-block-end: 1px solid var(--grey-200, #e8e8e8);
 	flex-shrink: 0;
 }
 
@@ -389,20 +393,20 @@ function formatDate(dateStr: string): string {
 	padding: 0.75rem;
 	background: none;
 	border: none;
-	border-bottom: 2px solid transparent;
+	border-block-end: 2px solid transparent;
 	cursor: pointer;
 	font-size: 0.85rem;
 	font-weight: 500;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	transition: color 0.15s, border-color 0.15s;
 
 	&.is-active {
 		color: var(--primary, #1973ff);
-		border-bottom-color: var(--primary, #1973ff);
+		border-block-end-color: var(--primary, #1973ff);
 	}
 
 	&:hover:not(.is-active) {
-		color: var(--text, #333);
+		color: var(--text, #333333);
 	}
 }
 
@@ -410,12 +414,12 @@ function formatDate(dateStr: string): string {
 
 .meal-select-panel__search {
 	padding: 0.75rem 1rem;
-	border-bottom: 1px solid var(--grey-100, #f5f5f5);
+	border-block-end: 1px solid var(--grey-100, #f5f5f5);
 	flex-shrink: 0;
 }
 
 .meal-select-panel__search-input {
-	width: 100%;
+	inline-size: 100%;
 	padding: 0.5rem 0.75rem;
 	border: 1px solid var(--grey-200, #e8e8e8);
 	border-radius: 8px;
@@ -458,7 +462,7 @@ function formatDate(dateStr: string): string {
 	}
 
 	&--claude {
-		border-color: var(--grey-300, #ddd);
+		border-color: var(--grey-300, #dddddd);
 		background: var(--grey-50, #fafafa);
 	}
 }
@@ -467,7 +471,7 @@ function formatDate(dateStr: string): string {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-bottom: 0.35rem;
+	margin-block-end: 0.35rem;
 }
 
 .meal-select-panel__recipe-badge {
@@ -497,19 +501,19 @@ function formatDate(dateStr: string): string {
 .meal-select-panel__recipe-name {
 	font-size: 0.875rem;
 	font-weight: 600;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	margin: 0 0 0.2rem;
 }
 
 .meal-select-panel__recipe-meta {
 	font-size: 0.75rem;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	margin: 0;
 }
 
 .meal-select-panel__recipe-notes {
 	font-size: 0.75rem;
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 	margin: 0.3rem 0 0;
 	font-style: italic;
 }
@@ -518,7 +522,7 @@ function formatDate(dateStr: string): string {
 
 .meal-select-panel__empty {
 	text-align: center;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	font-size: 0.875rem;
 	padding: 2rem 0;
 }
@@ -530,7 +534,7 @@ function formatDate(dateStr: string): string {
 	cursor: pointer;
 	font-size: 0.875rem;
 	text-decoration: underline;
-	margin-top: 0.5rem;
+	margin-block-start: 0.5rem;
 }
 
 .meal-select-panel__loading {
@@ -539,15 +543,15 @@ function formatDate(dateStr: string): string {
 	align-items: center;
 	gap: 1rem;
 	padding: 2rem;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	font-size: 0.875rem;
 }
 
 .meal-select-panel__spinner {
-	width: 2rem;
-	height: 2rem;
+	inline-size: 2rem;
+	block-size: 2rem;
 	border: 2px solid var(--grey-200, #e8e8e8);
-	border-top-color: var(--primary, #1973ff);
+	border-block-start-color: var(--primary, #1973ff);
 	border-radius: 50%;
 	animation: spin 0.8s linear infinite;
 }
@@ -561,16 +565,16 @@ function formatDate(dateStr: string): string {
 }
 
 .meal-select-panel__refresh {
-	width: 100%;
+	inline-size: 100%;
 	padding: 0.6rem;
 	background: var(--grey-100, #f5f5f5);
 	border: 1px solid var(--grey-200, #e8e8e8);
 	border-radius: 8px;
 	cursor: pointer;
 	font-size: 0.85rem;
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 	transition: background 0.15s;
-	margin-top: 0.25rem;
+	margin-block-start: 0.25rem;
 
 	&:hover {
 		background: var(--grey-200, #e8e8e8);

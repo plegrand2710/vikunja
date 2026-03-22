@@ -4,7 +4,9 @@
 		<aside class="meal-planner__sidebar">
 			<div class="meal-planner__sidebar-header">
 				<span class="meal-planner__sidebar-icon">🍽️</span>
-				<h2 class="meal-planner__sidebar-title">FridgeFlow</h2>
+				<h2 class="meal-planner__sidebar-title">
+					FridgeFlow
+				</h2>
 			</div>
 
 			<nav class="meal-planner__nav">
@@ -190,8 +192,8 @@ function formatWeekStart(dateStr: string): string {
 <style lang="scss" scoped>
 .meal-planner {
 	display: flex;
-	height: 100%;
-	min-height: calc(100vh - var(--navbar-height, 4rem));
+	block-size: 100%;
+	min-block-size: calc(100vh - var(--navbar-height, 4rem));
 	background: var(--site-background);
 }
 
@@ -199,13 +201,13 @@ function formatWeekStart(dateStr: string): string {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  max-width: 900px;
+  max-inline-size: 900px;
 }
 
 // ── SIDEBAR ──────────────────────────────────
 
 .meal-planner__sidebar {
-	width: 220px;
+	inline-size: 220px;
 	flex-shrink: 0;
 	background: var(--grey-100, #f5f5f5);
 	border-inline-end: 1px solid var(--grey-200, #e8e8e8);
@@ -220,8 +222,8 @@ function formatWeekStart(dateStr: string): string {
 	align-items: center;
 	gap: 0.75rem;
 	padding: 0 1.25rem 1rem;
-	border-bottom: 1px solid var(--grey-200, #e8e8e8);
-	margin-bottom: 0.5rem;
+	border-block-end: 1px solid var(--grey-200, #e8e8e8);
+	margin-block-end: 0.5rem;
 }
 
 .meal-planner__sidebar-icon {
@@ -231,7 +233,7 @@ function formatWeekStart(dateStr: string): string {
 .meal-planner__sidebar-title {
 	font-size: 1.1rem;
 	font-weight: 700;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	margin: 0;
 }
 
@@ -251,11 +253,11 @@ function formatWeekStart(dateStr: string): string {
 	border: none;
 	background: transparent;
 	cursor: pointer;
-	width: 100%;
+	inline-size: 100%;
 	text-align: start;
 	font-size: 0.9rem;
 	font-weight: 500;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	transition: background 0.15s ease, color 0.15s ease;
 	position: relative;
 
@@ -285,7 +287,7 @@ function formatWeekStart(dateStr: string): string {
 	font-weight: 700;
 	border-radius: 999px;
 	padding: 0.1rem 0.4rem;
-	min-width: 1.2rem;
+	min-inline-size: 1.2rem;
 	text-align: center;
 
 	.is-active & {
@@ -303,23 +305,23 @@ function formatWeekStart(dateStr: string): string {
 }
 
 .meal-planner__section {
-	max-width: 1200px;
+	max-inline-size: 1200px;
 }
 
 .meal-planner__section-header {
-	margin-bottom: 2rem;
+	margin-block-end: 2rem;
 
 	h1 {
 		font-size: 1.6rem;
 		font-weight: 700;
-		color: var(--text, #333);
+		color: var(--text, #333333);
 		margin: 0 0 0.25rem;
 	}
 }
 
 .meal-planner__section-subtitle {
 	font-size: 0.9rem;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	margin: 0;
 }
 
@@ -337,9 +339,9 @@ function formatWeekStart(dateStr: string): string {
 	justify-content: center;
 	gap: 1rem;
 	padding: 4rem;
-	border: 2px dashed var(--grey-300, #ddd);
+	border: 2px dashed var(--grey-300, #dddddd);
 	border-radius: 12px;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 
 	span {
 		font-size: 3rem;
@@ -376,17 +378,17 @@ function formatWeekStart(dateStr: string): string {
 }
 
 .meal-planner__loading-spinner {
-	width: 2.5rem;
-	height: 2.5rem;
+	inline-size: 2.5rem;
+	block-size: 2.5rem;
 	border: 3px solid var(--grey-200, #e8e8e8);
-	border-top-color: var(--primary, #1973ff);
+	border-block-start-color: var(--primary, #1973ff);
 	border-radius: 50%;
 	animation: spin 0.8s linear infinite;
 }
 
 .meal-planner__loading-message {
 	font-size: 0.95rem;
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 	font-weight: 500;
 	margin: 0;
 }
@@ -424,13 +426,13 @@ function formatWeekStart(dateStr: string): string {
 
 // ── RESPONSIVE ────────────────────────────────
 
-@media screen and (max-width: 768px) {
+@media screen and (width <= 768px) {
 	.meal-planner {
 		flex-direction: column;
 	}
 
 	.meal-planner__sidebar {
-		width: 100%;
+		inline-size: 100%;
 		padding: 0.75rem;
 	}
 

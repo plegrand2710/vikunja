@@ -149,10 +149,10 @@ export const useBaseStore = defineStore('base', () => {
 		try {
 			await checkAndSetApiUrl(window.API_URL)
 			await authStore.checkAuth()
-    if (authStore.isAuthenticated) {
-      const vikunjaSettings = useVikunjaSettings()
-      vikunjaSettings.loadFromVikunja()
-    }
+			if (authStore.isAuthenticated) {
+				const vikunjaSettings = useVikunjaSettings()
+				vikunjaSettings.loadFromVikunja()
+			}
 			await router.isReady()
 			ready.value = true
 		} catch (e: unknown) {

@@ -23,7 +23,9 @@
 							<span class="event-detail__source-badge">
 								{{ sourceLabel }}
 							</span>
-							<h2 class="event-detail__title">{{ event?.title }}</h2>
+							<h2 class="event-detail__title">
+								{{ event?.title }}
+							</h2>
 						</div>
 						<button
 							class="event-detail__close"
@@ -141,11 +143,11 @@ const router = useRouter()
 const event = computed(() => store.selectedEvent)
 
 const sourceColor = computed(() =>
-	event.value ? SOURCE_COLORS[event.value.source] : '#7c3aed'
+	event.value ? SOURCE_COLORS[event.value.source] : '#7c3aed',
 )
 
 const sourceLabel = computed(() =>
-	event.value ? SOURCE_LABELS[event.value.source] : ''
+	event.value ? SOURCE_LABELS[event.value.source] : '',
 )
 
 const recurrenceLabels: Record<string, string> = {
@@ -155,7 +157,7 @@ const recurrenceLabels: Record<string, string> = {
 }
 
 const recurrenceLabel = computed(() =>
-	event.value?.recurrence ? recurrenceLabels[event.value.recurrence] ?? '' : ''
+	event.value?.recurrence ? recurrenceLabels[event.value.recurrence] ?? '' : '',
 )
 
 const formatDateRange = computed(() => {
@@ -232,7 +234,7 @@ function goToTask() {
 	position: absolute;
 	inset-block: 0;
 	inset-inline-end: 0;
-	width: min(420px, 100vw);
+	inline-size: min(420px, 100vw);
 	background: white;
 	box-shadow: -4px 0 24px rgba(0,0,0,0.15);
 	display: flex;
@@ -241,7 +243,7 @@ function goToTask() {
 }
 
 .event-detail__color-bar {
-	height: 6px;
+	block-size: 6px;
 	flex-shrink: 0;
 }
 
@@ -250,23 +252,23 @@ function goToTask() {
 	align-items: flex-start;
 	justify-content: space-between;
 	padding: 1.25rem 1.25rem 0.75rem;
-	border-bottom: 1px solid var(--grey-100, #f0f0f0);
+	border-block-end: 1px solid var(--grey-100, #f0f0f0);
 }
 
 .event-detail__source-badge {
 	font-size: 0.7rem;
 	font-weight: 600;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	text-transform: uppercase;
 	letter-spacing: 0.05em;
 	display: block;
-	margin-bottom: 0.25rem;
+	margin-block-end: 0.25rem;
 }
 
 .event-detail__title {
 	font-size: 1.2rem;
 	font-weight: 700;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	margin: 0;
 	line-height: 1.3;
 }
@@ -278,7 +280,7 @@ function goToTask() {
 	cursor: pointer;
 	padding: 0.25rem 0.5rem;
 	border-radius: 6px;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	flex-shrink: 0;
 
 	&:hover { background: var(--grey-100, #f5f5f5); }
@@ -297,14 +299,14 @@ function goToTask() {
 	align-items: flex-start;
 	gap: 0.75rem;
 	font-size: 0.875rem;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	line-height: 1.5;
 }
 
 .event-detail__info-icon {
 	font-size: 1rem;
 	flex-shrink: 0;
-	margin-top: 0.1rem;
+	margin-block-start: 0.1rem;
 }
 
 .event-detail__actions {
@@ -312,15 +314,15 @@ function goToTask() {
 	flex-wrap: wrap;
 	gap: 0.5rem;
 	padding: 1rem 1.25rem;
-	border-top: 1px solid var(--grey-200, #e8e8e8);
+	border-block-start: 1px solid var(--grey-200, #e8e8e8);
 	background: white;
 	position: sticky;
-	bottom: 0;
+	inset-block-end: 0;
 }
 
 .event-detail__readonly {
 	font-size: 0.8rem;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	font-style: italic;
 	margin: 0;
 	flex: 1;
@@ -382,7 +384,7 @@ function goToTask() {
   border-color: var(--input-border, #3a3d4a) !important;
 }
 
-.event-detail__btn:not(.event-detail__btn--primary):not(.event-detail__btn--danger) {
+.event-detail__btn:not(.event-detail__btn--primary, .event-detail__btn--danger) {
   background: var(--input-background, #2a2d38) !important;
   color: var(--text, #e0e0e0) !important;
   border-color: var(--input-border, #3a3d4a) !important;

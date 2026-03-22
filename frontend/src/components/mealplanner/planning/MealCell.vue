@@ -30,7 +30,9 @@
 			</span>
 
 			<!-- Nom du repas -->
-			<p class="meal-cell__name">{{ meal.name }}</p>
+			<p class="meal-cell__name">
+				{{ meal.name }}
+			</p>
 
 			<!-- Calories -->
 			<p class="meal-cell__calories">
@@ -137,8 +139,8 @@ function handleClick() {
 	position: relative;
 	border-radius: 10px;
 	border: 2px solid var(--grey-200, #e8e8e8);
-	background: var(--white, #fff);
-	min-height: 110px;
+	background: var(--white, #ffffff);
+	min-block-size: 110px;
 	cursor: pointer;
 	transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
 	overflow: hidden;
@@ -160,7 +162,7 @@ function handleClick() {
 	}
 
 	&.is-locked {
-		border-color: var(--grey-400, #bbb);
+		border-color: var(--grey-400, #bbbbbb);
 
 		&::after {
 			content: '';
@@ -183,13 +185,13 @@ function handleClick() {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 100%;
-	min-height: 110px;
+	block-size: 100%;
+	min-block-size: 110px;
 }
 
 .meal-cell__add-icon {
 	font-size: 1.8rem;
-	color: var(--grey-400, #bbb);
+	color: var(--grey-400, #bbbbbb);
 	line-height: 1;
 	transition: color 0.15s ease, transform 0.15s ease;
 
@@ -206,7 +208,7 @@ function handleClick() {
 	display: flex;
 	flex-direction: column;
 	gap: 0.25rem;
-	height: 100%;
+	block-size: 100%;
 }
 
 .meal-cell__diet-badge {
@@ -216,7 +218,7 @@ function handleClick() {
 	font-weight: 600;
 	padding: 0.15rem 0.4rem;
 	border-radius: 999px;
-	width: fit-content;
+	inline-size: fit-content;
 
 	&.diet--vegan {
 		background: #d1fae5;
@@ -237,7 +239,7 @@ function handleClick() {
 .meal-cell__name {
 	font-size: 0.82rem;
 	font-weight: 600;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	margin: 0;
 	line-height: 1.3;
 	// Tronque si trop long
@@ -249,7 +251,7 @@ function handleClick() {
 
 .meal-cell__calories {
 	font-size: 0.72rem;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	margin: 0;
 }
 
@@ -258,8 +260,8 @@ function handleClick() {
 .meal-cell__actions {
 	display: flex;
 	gap: 0.25rem;
-	margin-top: auto;
-	padding-top: 0.25rem;
+	margin-block-start: auto;
+	padding-block-start: 0.25rem;
 	opacity: 0;
 	transition: opacity 0.15s ease;
 
@@ -291,8 +293,8 @@ function handleClick() {
 
 .meal-cell__violation {
 	position: absolute;
-	top: 0.3rem;
-	right: 0.3rem;
+	inset-block-start: 0.3rem;
+	inset-inline-end: 0.3rem;
 	font-size: 0.8rem;
 	line-height: 1;
 }

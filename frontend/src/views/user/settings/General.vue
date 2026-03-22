@@ -369,9 +369,12 @@
 		</div>
 	</Card>
 
-<Card :title="'⚙️ Valeurs par défaut des tâches'" class="general-settings mt-4">
-  <TaskDefaultsSettings />
-</Card>
+	<Card
+		:title="'⚙️ Valeurs par défaut des tâches'"
+		class="general-settings mt-4"
+	>
+		<TaskDefaultsSettings />
+	</Card>
 
 
 	<div class="sticky-save">

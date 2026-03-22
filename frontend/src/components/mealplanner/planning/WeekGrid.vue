@@ -69,12 +69,12 @@
 				<MealCell
 					v-for="day in store.DAYS"
 					:key="`${day}-${slot}`"
-					:day="day"
 					:slot="slot"
+					:day="day"
 					:meal="store.weekPlan.days[day]?.[slot] ?? null"
 					@click="openSelectPanel"
 					@remove="store.removeMeal"
-					@toggle-lock="store.toggleMealLock"
+					@toggleLock="store.toggleMealLock"
 				/>
 			</template>
 		</div>
@@ -84,9 +84,9 @@
 
 		<!-- Panneau de sélection -->
 		<MealSelectPanel
+			:slot="activeSlot"
 			:is-open="panelOpen"
 			:day="activeDay"
-			:slot="activeSlot"
 			@close="panelOpen = false"
 			@select="handleRecipeSelected"
 		/>
@@ -279,8 +279,8 @@ function formatWeekStart(dateStr: string): string {
 	background: var(--grey-100, #f5f5f5);
 	border: 1px solid var(--grey-200, #e8e8e8);
 	border-radius: 8px;
-	width: 2rem;
-	height: 2rem;
+	inline-size: 2rem;
+	block-size: 2rem;
 	font-size: 1.2rem;
 	cursor: pointer;
 	display: flex;
@@ -296,7 +296,7 @@ function formatWeekStart(dateStr: string): string {
 .week-grid__week-label {
 	font-size: 0.9rem;
 	font-weight: 600;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 }
 
 .week-grid__actions {
@@ -308,7 +308,7 @@ function formatWeekStart(dateStr: string): string {
 	padding: 0.45rem 0.9rem;
 	border-radius: 8px;
 	border: 1px solid var(--grey-200, #e8e8e8);
-	background: var(--white, #fff);
+	background: var(--white, #ffffff);
 	font-size: 0.85rem;
 	font-weight: 500;
 	cursor: pointer;
@@ -351,7 +351,7 @@ function formatWeekStart(dateStr: string): string {
 	grid-template-columns: 90px repeat(7, 1fr);
 	gap: 0.5rem;
 	overflow-x: auto;
-	min-width: 0;
+	min-inline-size: 0;
 }
 
 .week-grid__corner {
@@ -381,14 +381,14 @@ function formatWeekStart(dateStr: string): string {
 	display: block;
 	font-weight: 700;
 	font-size: 0.85rem;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 }
 
 .week-grid__day-diet {
 	display: block;
 	font-size: 0.7rem;
-	color: var(--grey-600, #666);
-	margin-top: 0.1rem;
+	color: var(--grey-600, #666666);
+	margin-block-start: 0.1rem;
 }
 
 .week-grid__slot-label {
@@ -396,7 +396,7 @@ function formatWeekStart(dateStr: string): string {
 	align-items: center;
 	font-size: 0.78rem;
 	font-weight: 600;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	padding-inline-end: 0.5rem;
 }
 
@@ -420,13 +420,13 @@ function formatWeekStart(dateStr: string): string {
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
-	max-width: 340px;
-	width: 90%;
+	max-inline-size: 340px;
+	inline-size: 90%;
 
 	p {
 		font-size: 1rem;
 		font-weight: 500;
-		color: var(--text, #333);
+		color: var(--text, #333333);
 		margin: 0;
 		text-align: center;
 	}

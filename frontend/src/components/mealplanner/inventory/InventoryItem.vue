@@ -57,7 +57,7 @@
 				v-model="editData.name"
 				class="inventory-item__edit-input"
 				placeholder="Nom"
-			/>
+			>
 
 			<div class="inventory-item__qty-edit">
 				<input
@@ -65,7 +65,7 @@
 					type="number"
 					min="0"
 					class="inventory-item__edit-input inventory-item__edit-input--small"
-				/>
+				>
 				<select
 					v-model="editData.unit"
 					class="inventory-item__edit-select"
@@ -84,7 +84,7 @@
 				v-model="editData.expiry"
 				type="date"
 				class="inventory-item__edit-input"
-			/>
+			>
 
 			<div class="inventory-item__actions">
 				<button
@@ -195,7 +195,7 @@ function formatDate(dateStr: string): string {
 
 	&.is-expiring {
 		background: rgba(245, 158, 11, 0.06);
-		border-left: 3px solid var(--warning, #f59e0b);
+		border-inline-start: 3px solid var(--warning, #f59e0b);
 	}
 }
 
@@ -207,17 +207,17 @@ function formatDate(dateStr: string): string {
 .inventory-item__name {
 	font-size: 0.875rem;
 	font-weight: 500;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 }
 
 .inventory-item__qty {
 	font-size: 0.825rem;
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 }
 
 .inventory-item__expiry {
 	font-size: 0.775rem;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 
 	&.is-soon {
 		color: var(--warning, #d97706);
@@ -225,7 +225,7 @@ function formatDate(dateStr: string): string {
 	}
 
 	&--none {
-		color: var(--grey-300, #ddd);
+		color: var(--grey-300, #dddddd);
 	}
 }
 
@@ -271,17 +271,17 @@ function formatDate(dateStr: string): string {
 }
 
 .inventory-item__edit-input {
-	width: 100%;
+	inline-size: 100%;
 	padding: 0.3rem 0.5rem;
 	border: 1px solid var(--primary, #1973ff);
 	border-radius: 6px;
 	font-size: 0.8rem;
 	outline: none;
 	background: white;
-	min-width: 0;
+	min-inline-size: 0;
 
 	&--small {
-		width: 50px;
+		inline-size: 50px;
 	}
 }
 

@@ -25,7 +25,9 @@
 									{{ recipe.origin === 'claude' ? '🤖 Claude' : '✍️ Manuel' }}
 								</span>
 							</div>
-							<h2 class="recipe-detail__title">{{ recipe.name }}</h2>
+							<h2 class="recipe-detail__title">
+								{{ recipe.name }}
+							</h2>
 						</div>
 						<button
 							class="recipe-detail__close"
@@ -90,7 +92,9 @@
 					<div class="recipe-detail__body">
 						<!-- Ingrédients -->
 						<div class="recipe-detail__section">
-							<h3 class="recipe-detail__section-title">Ingrédients</h3>
+							<h3 class="recipe-detail__section-title">
+								Ingrédients
+							</h3>
 							<ul class="recipe-detail__ingredients">
 								<li
 									v-for="(ing, i) in recipe.ingredients"
@@ -107,7 +111,9 @@
 
 						<!-- Étapes -->
 						<div class="recipe-detail__section">
-							<h3 class="recipe-detail__section-title">Préparation</h3>
+							<h3 class="recipe-detail__section-title">
+								Préparation
+							</h3>
 							<ol class="recipe-detail__steps">
 								<li
 									v-for="(step, i) in recipe.steps"
@@ -124,8 +130,12 @@
 							v-if="recipe.notes"
 							class="recipe-detail__section"
 						>
-							<h3 class="recipe-detail__section-title">Notes</h3>
-							<p class="recipe-detail__notes">{{ recipe.notes }}</p>
+							<h3 class="recipe-detail__section-title">
+								Notes
+							</h3>
+							<p class="recipe-detail__notes">
+								{{ recipe.notes }}
+							</p>
 						</div>
 					</div>
 
@@ -173,7 +183,9 @@
 									✕
 								</button>
 							</div>
-							<p class="recipe-detail__variant-name">{{ variantRecipe.name }}</p>
+							<p class="recipe-detail__variant-name">
+								{{ variantRecipe.name }}
+							</p>
 							<p class="recipe-detail__variant-meta">
 								🔥 {{ variantRecipe.calories }} kcal ·
 								⏱ {{ variantRecipe.prepTime + variantRecipe.cookTime }} min
@@ -279,8 +291,8 @@ function formatDate(dateStr: string): string {
 	position: absolute;
 	inset-block: 0;
 	inset-inline-end: 0;
-	width: min(520px, 100vw);
-	background: var(--white, #fff);
+	inline-size: min(520px, 100vw);
+	background: var(--white, #ffffff);
 	display: flex;
 	flex-direction: column;
 	box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
@@ -294,9 +306,9 @@ function formatDate(dateStr: string): string {
 	align-items: flex-start;
 	justify-content: space-between;
 	padding: 1.25rem 1.25rem 1rem;
-	border-bottom: 1px solid var(--grey-200, #e8e8e8);
+	border-block-end: 1px solid var(--grey-200, #e8e8e8);
 	position: sticky;
-	top: 0;
+	inset-block-start: 0;
 	background: white;
 	z-index: 1;
 }
@@ -304,7 +316,7 @@ function formatDate(dateStr: string): string {
 .recipe-detail__badges {
 	display: flex;
 	gap: 0.4rem;
-	margin-bottom: 0.4rem;
+	margin-block-end: 0.4rem;
 }
 
 .recipe-detail__diet-badge {
@@ -330,7 +342,7 @@ function formatDate(dateStr: string): string {
 .recipe-detail__title {
 	font-size: 1.25rem;
 	font-weight: 700;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	margin: 0;
 	line-height: 1.3;
 }
@@ -342,7 +354,7 @@ function formatDate(dateStr: string): string {
 	cursor: pointer;
 	padding: 0.25rem 0.5rem;
 	border-radius: 6px;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	flex-shrink: 0;
 
 	&:hover {
@@ -358,7 +370,7 @@ function formatDate(dateStr: string): string {
 	gap: 0.75rem;
 	padding: 0.75rem 1.25rem;
 	background: var(--grey-50, #fafafa);
-	border-bottom: 1px solid var(--grey-100, #f0f0f0);
+	border-block-end: 1px solid var(--grey-100, #f0f0f0);
 }
 
 .recipe-detail__meta-item {
@@ -366,7 +378,7 @@ function formatDate(dateStr: string): string {
 	align-items: center;
 	gap: 0.3rem;
 	font-size: 0.8rem;
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 }
 
 // ── Note ──────────────────────────────────────
@@ -402,7 +414,7 @@ function formatDate(dateStr: string): string {
 .recipe-detail__tag {
 	font-size: 0.72rem;
 	background: var(--grey-100, #f5f5f5);
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 	padding: 0.15rem 0.5rem;
 	border-radius: 4px;
 }
@@ -420,7 +432,7 @@ function formatDate(dateStr: string): string {
 .recipe-detail__section-title {
 	font-size: 0.875rem;
 	font-weight: 700;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	text-transform: uppercase;
 	letter-spacing: 0.05em;
 	margin: 0 0 0.6rem;
@@ -439,17 +451,17 @@ function formatDate(dateStr: string): string {
 	display: flex;
 	gap: 0.5rem;
 	font-size: 0.875rem;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 }
 
 .recipe-detail__ingredient-qty {
 	font-weight: 600;
 	color: var(--primary, #1973ff);
-	min-width: 70px;
+	min-inline-size: 70px;
 }
 
 .recipe-detail__steps {
-	padding-left: 1.25rem;
+	padding-inline-start: 1.25rem;
 	margin: 0;
 	display: flex;
 	flex-direction: column;
@@ -458,13 +470,13 @@ function formatDate(dateStr: string): string {
 
 .recipe-detail__step {
 	font-size: 0.875rem;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	line-height: 1.5;
 }
 
 .recipe-detail__notes {
 	font-size: 0.875rem;
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 	font-style: italic;
 	margin: 0;
 	padding: 0.75rem;
@@ -479,17 +491,17 @@ function formatDate(dateStr: string): string {
 	flex-wrap: wrap;
 	gap: 0.5rem;
 	padding: 1rem 1.25rem;
-	border-top: 1px solid var(--grey-200, #e8e8e8);
+	border-block-start: 1px solid var(--grey-200, #e8e8e8);
 	background: white;
 	position: sticky;
-	bottom: 0;
+	inset-block-end: 0;
 }
 
 .recipe-detail__action-btn {
 	padding: 0.45rem 0.9rem;
 	border-radius: 8px;
 	border: 1px solid var(--grey-200, #e8e8e8);
-	background: var(--white, #fff);
+	background: var(--white, #ffffff);
 	font-size: 0.85rem;
 	font-weight: 500;
 	cursor: pointer;
@@ -548,7 +560,7 @@ function formatDate(dateStr: string): string {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 0.5rem;
+	margin-block-end: 0.5rem;
 
 	h4 {
 		font-size: 0.85rem;
@@ -569,13 +581,13 @@ function formatDate(dateStr: string): string {
 .recipe-detail__variant-name {
 	font-size: 0.9rem;
 	font-weight: 600;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	margin: 0 0 0.25rem;
 }
 
 .recipe-detail__variant-meta {
 	font-size: 0.78rem;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	margin: 0 0 0.6rem;
 }
 

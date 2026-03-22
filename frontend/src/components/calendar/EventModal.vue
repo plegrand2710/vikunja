@@ -24,7 +24,6 @@
 
 					<!-- Formulaire -->
 					<div class="event-modal__body">
-
 						<!-- Titre -->
 						<div class="event-modal__field">
 							<label>Titre *</label>
@@ -35,7 +34,7 @@
 								class="event-modal__input"
 								autofocus
 								@keydown.enter="handleSave"
-							/>
+							>
 						</div>
 
 						<!-- Toute la journée -->
@@ -45,7 +44,7 @@
 									v-model="form.allDay"
 									type="checkbox"
 									class="event-modal__checkbox"
-								/>
+								>
 								Toute la journée
 							</label>
 						</div>
@@ -58,13 +57,13 @@
 									v-model="form.startDate"
 									type="date"
 									class="event-modal__input"
-								/>
+								>
 								<input
 									v-if="!form.allDay"
 									v-model="form.startTime"
 									type="time"
 									class="event-modal__input event-modal__input--time"
-								/>
+								>
 							</div>
 						</div>
 
@@ -75,13 +74,13 @@
 									v-model="form.endDate"
 									type="date"
 									class="event-modal__input"
-								/>
+								>
 								<input
 									v-if="!form.allDay"
 									v-model="form.endTime"
 									type="time"
 									class="event-modal__input event-modal__input--time"
-								/>
+								>
 							</div>
 						</div>
 
@@ -92,10 +91,18 @@
 								v-model="form.recurrence"
 								class="event-modal__select"
 							>
-								<option value="none">Aucune</option>
-								<option value="daily">Chaque jour</option>
-								<option value="weekly">Chaque semaine</option>
-								<option value="monthly">Chaque mois</option>
+								<option value="none">
+									Aucune
+								</option>
+								<option value="daily">
+									Chaque jour
+								</option>
+								<option value="weekly">
+									Chaque semaine
+								</option>
+								<option value="monthly">
+									Chaque mois
+								</option>
 							</select>
 						</div>
 
@@ -124,7 +131,6 @@
 								class="event-modal__textarea"
 							/>
 						</div>
-
 					</div>
 
 					<!-- Footer -->
@@ -354,7 +360,7 @@ async function handleDelete() {
 	position: relative;
 	background: white;
 	border-radius: 16px;
-	width: min(480px, 100%);
+	inline-size: min(480px, 100%);
 	box-shadow: 0 16px 48px rgba(0,0,0,0.2);
 	overflow: hidden;
 }
@@ -364,13 +370,13 @@ async function handleDelete() {
 	align-items: center;
 	justify-content: space-between;
 	padding: 1.25rem 1.5rem 1rem;
-	border-bottom: 1px solid var(--grey-200, #e8e8e8);
+	border-block-end: 1px solid var(--grey-200, #e8e8e8);
 
 	h3 {
 		font-size: 1rem;
 		font-weight: 700;
 		margin: 0;
-		color: var(--text, #333);
+		color: var(--text, #333333);
 	}
 }
 
@@ -381,7 +387,7 @@ async function handleDelete() {
 	cursor: pointer;
 	padding: 0.25rem 0.5rem;
 	border-radius: 6px;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 
 	&:hover { background: var(--grey-100, #f5f5f5); }
 }
@@ -391,7 +397,7 @@ async function handleDelete() {
 	display: flex;
 	flex-direction: column;
 	gap: 0.875rem;
-	max-height: 60vh;
+	max-block-size: 60vh;
 	overflow-y: auto;
 }
 
@@ -403,7 +409,7 @@ async function handleDelete() {
 	label {
 		font-size: 0.78rem;
 		font-weight: 600;
-		color: var(--grey-600, #666);
+		color: var(--grey-600, #666666);
 		text-transform: uppercase;
 		letter-spacing: 0.04em;
 	}
@@ -420,15 +426,15 @@ async function handleDelete() {
 	gap: 0.5rem;
 	font-size: 0.875rem !important;
 	font-weight: 500 !important;
-	color: var(--text, #333) !important;
+	color: var(--text, #333333) !important;
 	text-transform: none !important;
 	letter-spacing: 0 !important;
 	cursor: pointer;
 }
 
 .event-modal__checkbox {
-	width: 1rem;
-	height: 1rem;
+	inline-size: 1rem;
+	block-size: 1rem;
 	cursor: pointer;
 	accent-color: var(--primary, #1973ff);
 }
@@ -439,7 +445,7 @@ async function handleDelete() {
 }
 
 .event-modal__input {
-	width: 100%;
+	inline-size: 100%;
 	padding: 0.5rem 0.75rem;
 	border: 1px solid var(--grey-200, #e8e8e8);
 	border-radius: 8px;
@@ -450,7 +456,7 @@ async function handleDelete() {
 
 	&:focus { border-color: var(--primary, #1973ff); }
 
-	&--time { width: 110px; flex-shrink: 0; }
+	&--time { inline-size: 110px; flex-shrink: 0; }
 }
 
 .event-modal__select {
@@ -482,8 +488,8 @@ async function handleDelete() {
 }
 
 .event-modal__color-btn {
-	width: 1.5rem;
-	height: 1.5rem;
+	inline-size: 1.5rem;
+	block-size: 1.5rem;
 	border-radius: 50%;
 	border: 2px solid transparent;
 	cursor: pointer;
@@ -492,7 +498,7 @@ async function handleDelete() {
 	&:hover { transform: scale(1.15); }
 
 	&.is-active {
-		border-color: var(--text, #333);
+		border-color: var(--text, #333333);
 		transform: scale(1.15);
 	}
 }
@@ -502,13 +508,13 @@ async function handleDelete() {
 	align-items: center;
 	justify-content: space-between;
 	padding: 1rem 1.5rem;
-	border-top: 1px solid var(--grey-200, #e8e8e8);
+	border-block-start: 1px solid var(--grey-200, #e8e8e8);
 }
 
 .event-modal__footer-right {
 	display: flex;
 	gap: 0.5rem;
-	margin-left: auto;
+	margin-inline-start: auto;
 }
 
 .event-modal__btn {
@@ -561,7 +567,7 @@ async function handleDelete() {
   border-color: var(--input-border, #3a3d4a) !important;
 }
 
-.event-modal__btn:not(.event-modal__btn--primary):not(.event-modal__btn--danger) {
+.event-modal__btn:not(.event-modal__btn--primary, .event-modal__btn--danger) {
   background: var(--input-background, #2a2d38) !important;
   color: var(--text, #e0e0e0) !important;
   border-color: var(--input-border, #3a3d4a) !important;

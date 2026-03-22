@@ -28,7 +28,9 @@
 					<div class="sync-status__panel">
 						<div class="sync-status__panel-header">
 							<h3>Configuration CalDAV</h3>
-							<button @click="showConfig = false">✕</button>
+							<button @click="showConfig = false">
+								✕
+							</button>
 						</div>
 
 						<div class="sync-status__panel-body">
@@ -39,7 +41,7 @@
 									type="text"
 									placeholder="http://82.67.177.75:9090/radicale/pauline/"
 									class="sync-status__input"
-								/>
+								>
 							</div>
 							<div class="sync-status__field">
 								<label>Utilisateur</label>
@@ -48,7 +50,7 @@
 									type="text"
 									placeholder="pauline"
 									class="sync-status__input"
-								/>
+								>
 							</div>
 							<div class="sync-status__field">
 								<label>Mot de passe</label>
@@ -57,7 +59,7 @@
 									type="password"
 									placeholder="••••••••"
 									class="sync-status__input"
-								/>
+								>
 								<p class="sync-status__hint">
 									Non persisté — redemandé à chaque session
 								</p>
@@ -135,10 +137,10 @@ function handleSave() {
 	gap: 0.75rem;
 	padding: 0.5rem 0.75rem;
 	background: var(--grey-50, #fafafa);
-	border: 1px dashed var(--grey-300, #ddd);
+	border: 1px dashed var(--grey-300, #dddddd);
 	border-radius: 8px;
 	font-size: 0.82rem;
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 }
 
 .sync-status__config-btn {
@@ -174,7 +176,7 @@ function handleSave() {
 	position: relative;
 	background: white;
 	border-radius: 16px;
-	width: min(480px, 90vw);
+	inline-size: min(480px, 90vw);
 	box-shadow: 0 16px 48px rgba(0,0,0,0.2);
 	overflow: hidden;
 }
@@ -184,13 +186,13 @@ function handleSave() {
 	align-items: center;
 	justify-content: space-between;
 	padding: 1.25rem 1.5rem 1rem;
-	border-bottom: 1px solid var(--grey-200, #e8e8e8);
+	border-block-end: 1px solid var(--grey-200, #e8e8e8);
 
 	h3 {
 		font-size: 1rem;
 		font-weight: 700;
 		margin: 0;
-		color: var(--text, #333);
+		color: var(--text, #333333);
 	}
 
 	button {
@@ -198,7 +200,7 @@ function handleSave() {
 		border: none;
 		cursor: pointer;
 		font-size: 1rem;
-		color: var(--grey-500, #888);
+		color: var(--grey-500, #888888);
 		padding: 0.25rem 0.5rem;
 		border-radius: 6px;
 
@@ -221,7 +223,7 @@ function handleSave() {
 	label {
 		font-size: 0.78rem;
 		font-weight: 600;
-		color: var(--grey-600, #666);
+		color: var(--grey-600, #666666);
 		text-transform: uppercase;
 		letter-spacing: 0.04em;
 	}
@@ -240,7 +242,7 @@ function handleSave() {
 
 .sync-status__hint {
 	font-size: 0.72rem;
-	color: var(--grey-400, #bbb);
+	color: var(--grey-400, #bbbbbb);
 	margin: 0;
 }
 
@@ -259,7 +261,7 @@ function handleSave() {
 	justify-content: flex-end;
 	gap: 0.5rem;
 	padding: 1rem 1.5rem;
-	border-top: 1px solid var(--grey-200, #e8e8e8);
+	border-block-start: 1px solid var(--grey-200, #e8e8e8);
 }
 
 .sync-status__btn {

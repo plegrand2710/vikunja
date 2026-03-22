@@ -259,7 +259,7 @@ onMounted(async () => {
 	.fc-col-header-cell {
 		font-size: 0.82rem;
 		font-weight: 700;
-		color: var(--grey-600, #666);
+		color: var(--grey-600, #666666);
 		padding: 0.5rem 0;
 		background: var(--grey-50, #fafafa);
 	}
@@ -281,7 +281,7 @@ onMounted(async () => {
 	.fc-timegrid-axis,
 	.fc-week-number {
 		font-size: 0.72rem;
-		color: var(--grey-400, #bbb);
+		color: var(--grey-400, #bbbbbb);
 	}
 
 	// Indicateur "maintenant"
@@ -314,7 +314,7 @@ onMounted(async () => {
 	display: flex;
 	flex-direction: column;
 	gap: 0;
-	height: 100%;
+	block-size: 100%;
 }
 
 .calendar-view__error {
@@ -323,12 +323,12 @@ onMounted(async () => {
 	color: #991b1b;
 	border-radius: 8px;
 	font-size: 0.875rem;
-	margin-bottom: 0.75rem;
+	margin-block-end: 0.75rem;
 }
 
 .calendar-view__fc-wrapper {
 	flex: 1;
-	min-height: 0;
+	min-block-size: 0;
 	transition: opacity 0.2s ease;
 
 	&.is-loading {

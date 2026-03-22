@@ -143,7 +143,7 @@ export function useCalendarSources() {
 				`${apiUrl}/tasks?filter_by=due_date&filter_comparator=not_null&per_page=100`,
 				{
 					headers: { Authorization: `Bearer ${token}` },
-				}
+				},
 			)
 
 			if (!response.ok) return
@@ -313,26 +313,28 @@ export function useCalendarSources() {
 	// ── Chargement global ─────────────────────
 
 	async function loadAllSources(): Promise<void> {
-        isLoading.value = true
-        error.value = null
+		isLoading.value = true
+		error.value = null
 
-        try {
-            const subsComposable = useSubscriptions()
-            const [, , subscriptionEvents] = await Promise.all([
-            loadCalDAVEvents(),
-            loadVikunjaEvents(),
-            subsComposable.fetchAllSubscriptions(),
-            ])
+		try {
+			const subsComposable = useSubscriptions()
 
-            // Stocker les événements des abonnements dans le store
-            // (ajoute subscriptionEvents au store calendar)
-            calendarStore.setSubscriptionEvents(subscriptionEvents)
-        } catch (e) {
-            error.value = e instanceof Error ? e.message : 'Erreur de chargement'
-        } finally {
-            isLoading.value = false
-        }
-    }
+			// Load shared subscriptions list first, then fetch events in parallel
+			await subsComposable.loadSharedSubscriptions()
+
+			const [, , subscriptionEvents] = await Promise.all([
+				loadCalDAVEvents(),
+				loadVikunjaEvents(),
+				subsComposable.fetchAllSubscriptions(),
+			])
+
+			calendarStore.setSubscriptionEvents(subscriptionEvents)
+		} catch (e) {
+			error.value = e instanceof Error ? e.message : 'Erreur de chargement'
+		} finally {
+			isLoading.value = false
+		}
+	}
 
 	// ── Événements formatés pour FullCalendar ──
 
@@ -364,12 +366,12 @@ export function useCalendarSources() {
 		// Source 4 : Repas FridgeFlow
 		events.push(...buildFridgeFlowEvents())
 
-        // Source 5 : Abonnements externes (ICS, CalDAV tiers...)
-        for (const event of calendarStore.subscriptionEvents) {
-            const sub = calendarStore.subscriptions.find(s => event.source === `sub_${s.id}`)
-            const color = sub?.color ?? '#06b6d4'
-            events.push(toFCEvent(event, color))
-        }
+		// Source 5 : Abonnements externes partagés (ICS, CalDAV...)
+		for (const event of calendarStore.subscriptionEvents) {
+			const sub = calendarStore.sharedSubscriptions.find(s => event.source === `sub_${s.id}`)
+			const color = sub?.color ?? '#06b6d4'
+			events.push(toFCEvent(event, color))
+		}
 
 		return events
 	})

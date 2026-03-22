@@ -61,8 +61,8 @@ function progressPercent(day: string): number {
 	grid-template-columns: repeat(7, 1fr);
 	gap: 0.5rem;
 	padding: 0.75rem 0 0;
-	border-top: 1px solid var(--grey-200, #e8e8e8);
-	margin-top: 0.75rem;
+	border-block-start: 1px solid var(--grey-200, #e8e8e8);
+	margin-block-start: 0.75rem;
 }
 
 .week-summary__day {
@@ -71,7 +71,7 @@ function progressPercent(day: string): number {
 	align-items: center;
 	gap: 0.2rem;
 	font-size: 0.72rem;
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 
 	&.status--ok .week-summary__bar-fill {
 		background: var(--success, #10b981);
@@ -92,24 +92,24 @@ function progressPercent(day: string): number {
 
 .week-summary__calories {
 	font-weight: 600;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 }
 
 .week-summary__bar-track {
-	width: 100%;
-	height: 4px;
+	inline-size: 100%;
+	block-size: 4px;
 	background: var(--grey-200, #e8e8e8);
 	border-radius: 999px;
 	overflow: hidden;
 }
 
 .week-summary__bar-fill {
-	height: 100%;
+	block-size: 100%;
 	border-radius: 999px;
 	transition: width 0.3s ease;
 }
 
 .week-summary__max {
-	color: var(--grey-400, #bbb);
+	color: var(--grey-400, #bbbbbb);
 }
 </style>

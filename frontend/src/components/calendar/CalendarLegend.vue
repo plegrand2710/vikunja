@@ -37,8 +37,8 @@ const store = useCalendarStore()
 const vikunjaSettings = useVikunjaSettings()
 
 function handleToggleSource(id: Parameters<typeof store.toggleSource>[0]) {
-  store.toggleSource(id)
-  vikunjaSettings.saveSources()
+	store.toggleSource(id)
+	vikunjaSettings.saveSources()
 }
 
 function formatSyncTime(isoDate: string): string {
@@ -55,8 +55,8 @@ function formatSyncTime(isoDate: string): string {
 	flex-wrap: wrap;
 	gap: 0.4rem;
 	padding: 0.75rem 0;
-	border-bottom: 1px solid var(--grey-100, #f0f0f0);
-	margin-bottom: 0.75rem;
+	border-block-end: 1px solid var(--grey-100, #f0f0f0);
+	margin-block-end: 0.75rem;
 }
 
 .cal-legend__item {
@@ -79,20 +79,20 @@ function formatSyncTime(isoDate: string): string {
 }
 
 .cal-legend__dot {
-	width: 10px;
-	height: 10px;
+	inline-size: 10px;
+	block-size: 10px;
 	border-radius: 50%;
 	flex-shrink: 0;
 	transition: background 0.15s;
 }
 
 .cal-legend__label {
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	font-weight: 500;
 }
 
 .cal-legend__sync {
-	color: var(--grey-400, #bbb);
+	color: var(--grey-400, #bbbbbb);
 	font-size: 0.7rem;
 }
 
@@ -106,6 +106,6 @@ function formatSyncTime(isoDate: string): string {
 }
 
 .cal-legend__label {
-  color: var(--text, #fff) !important;
+  color: var(--text, #ffffff) !important;
 }
 </style>

@@ -1,6 +1,8 @@
 <template>
 	<div class="global-constraints">
-		<h3 class="global-constraints__title">Contraintes globales</h3>
+		<h3 class="global-constraints__title">
+			Contraintes globales
+		</h3>
 
 		<div class="global-constraints__fields">
 			<!-- Calories max par repas -->
@@ -21,7 +23,7 @@
 					:value="store.constraints.global.maxCalPerMeal"
 					class="global-constraints__slider"
 					@input="updateMaxCalPerMeal"
-				/>
+				>
 				<div class="global-constraints__slider-labels">
 					<span>200</span>
 					<span>700</span>
@@ -47,7 +49,7 @@
 					:value="store.constraints.global.maxCalPerDay"
 					class="global-constraints__slider"
 					@input="updateMaxCalPerDay"
-				/>
+				>
 				<div class="global-constraints__slider-labels">
 					<span>800</span>
 					<span>2000</span>
@@ -76,7 +78,7 @@ function updateMaxCalPerDay(e: Event) {
 
 <style lang="scss" scoped>
 .global-constraints {
-	background: var(--white, #fff);
+	background: var(--white, #ffffff);
 	border: 1px solid var(--grey-200, #e8e8e8);
 	border-radius: 12px;
 	padding: 1.25rem;
@@ -85,7 +87,7 @@ function updateMaxCalPerDay(e: Event) {
 .global-constraints__title {
 	font-size: 1rem;
 	font-weight: 700;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	margin: 0 0 1.25rem;
 }
 
@@ -110,7 +112,7 @@ function updateMaxCalPerDay(e: Event) {
 .global-constraints__label {
 	font-size: 0.875rem;
 	font-weight: 500;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 }
 
 .global-constraints__value {
@@ -123,7 +125,7 @@ function updateMaxCalPerDay(e: Event) {
 }
 
 .global-constraints__slider {
-	width: 100%;
+	inline-size: 100%;
 	accent-color: var(--primary, #1973ff);
 	cursor: pointer;
 }
@@ -132,6 +134,6 @@ function updateMaxCalPerDay(e: Event) {
 	display: flex;
 	justify-content: space-between;
 	font-size: 0.7rem;
-	color: var(--grey-400, #bbb);
+	color: var(--grey-400, #bbbbbb);
 }
 </style>

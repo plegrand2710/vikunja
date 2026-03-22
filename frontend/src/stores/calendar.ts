@@ -17,31 +17,8 @@ import { defineStore } from 'pinia'
 
 export type EventSource = 'local' | 'vikunja' | 'google' | 'apple' | 'fridgeflow' | 'partner'
 
-export type SubscriptionType = 'caldav' | 'google' | 'apple' | 'ics'
- 
-export interface CalendarSubscription {
-  id: string
-  name: string
-  type: SubscriptionType
-  color: string
-  enabled: boolean
-  // CalDAV direct
-  url?: string
-  username?: string
-  password?: string
-  // ICS lecture seule
-  icsUrl?: string
-  // Google OAuth
-  googleClientId?: string
-  googleClientSecret?: string
-  googleToken?: string
-  // Apple
-  appleUsername?: string
-  applePassword?: string
-  // Statut
-  lastSync?: string
-  error?: string
-}
+export type { ICalendarSubscription as CalendarSubscription } from '@/modelTypes/ICalendarSubscription'
+import type { ICalendarSubscription } from '@/modelTypes/ICalendarSubscription'
 
 export type RecurrenceType = 'none' | 'daily' | 'weekly' | 'monthly'
 
@@ -111,10 +88,7 @@ export const DEFAULT_MEAL_TIMES = {
 // ─────────────────────────────────────────────
 
 function generateId(): string {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return generateUUID()
-  }
-  return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).substring(2, 11)
+	return generateUUID()
 }
 
 function loadFromStorage<T>(key: string, fallback: T): T {
@@ -135,11 +109,10 @@ function saveToStorage(key: string, value: unknown): void {
 }
 
 const STORAGE_KEYS = {
-	events:      'calendar_events',
-	sources:     'calendar_sources',
-	mealTimes:   'calendar_meal_times',
-	viewMode:    'calendar_view_mode',
-    subscriptions: 'calendar_subscriptions',
+	events:    'calendar_events',
+	sources:   'calendar_sources',
+	mealTimes: 'calendar_meal_times',
+	viewMode:  'calendar_view_mode',
 } as const
 
 // ─────────────────────────────────────────────
@@ -152,8 +125,8 @@ export const useCalendarStore = defineStore('calendar', () => {
 
 	/** Événements locaux (créés dans l'app, stockés dans localStorage) */
 	const localEvents = ref<CalendarEvent[]>(
-        loadFromStorage<CalendarEvent[]>(STORAGE_KEYS.events, []) ?? []
-    )
+		loadFromStorage<CalendarEvent[]>(STORAGE_KEYS.events, []) ?? [],
+	)
 
 	/** Configuration des sources */
 	const sources = ref<CalendarSource[]>(
@@ -164,35 +137,37 @@ export const useCalendarStore = defineStore('calendar', () => {
 			{ id: 'apple',      name: SOURCE_LABELS.apple,      color: SOURCE_COLORS.apple,      enabled: true },
 			{ id: 'fridgeflow', name: SOURCE_LABELS.fridgeflow, color: SOURCE_COLORS.fridgeflow, enabled: true },
 			{ id: 'partner',    name: SOURCE_LABELS.partner,    color: SOURCE_COLORS.partner,    enabled: true },
-		] as CalendarSource[])
+		] as CalendarSource[]),
 	)
 
 	/** Configuration CalDAV (Radicale) — jamais persistée pour la sécurité */
 	const caldavConfig = ref<CalDAVConfig>({
-        url: import.meta.env.VITE_CALDAV_URL ?? '',
-        username: import.meta.env.VITE_CALDAV_USERNAME ?? '',
-        password: import.meta.env.VITE_CALDAV_PASSWORD ?? '',
-    })
+		url: import.meta.env.VITE_CALDAV_URL ?? '',
+		username: import.meta.env.VITE_CALDAV_USERNAME ?? '',
+		password: import.meta.env.VITE_CALDAV_PASSWORD ?? '',
+	})
 
-   const subscriptions = ref<CalendarSubscription[]>(
-     loadFromStorage('calendar_subscriptions', [])
-   )
+	/** Shared subscriptions fetched from the backend API */
+	const sharedSubscriptions = ref<ICalendarSubscription[]>([])
 
-   const isSubscriptionModalOpen = ref(false)
-   const editingSubscription = ref<CalendarSubscription | null>(null)
+	/** IDs of subscriptions disabled by the current user (stored in frontendSettings) */
+	const disabledSubscriptionIds = ref<number[]>([])
+
+	const isSubscriptionModalOpen = ref(false)
+	const editingSubscription = ref<ICalendarSubscription | null>(null)
 
 	/** Heures d'affichage des repas */
 	const mealTimes = ref(
-		loadFromStorage(STORAGE_KEYS.mealTimes, DEFAULT_MEAL_TIMES)
+		loadFromStorage(STORAGE_KEYS.mealTimes, DEFAULT_MEAL_TIMES),
 	)
 
 	/** Mode d'affichage courant */
 	const storedViewMode = loadFromStorage<string>(STORAGE_KEYS.viewMode, 'timeGridWeek')
-    const viewMode = ref<'timeGridWeek' | 'dayGridMonth'>(
-    storedViewMode === 'timeGridWeek' || storedViewMode === 'dayGridMonth'
-        ? storedViewMode
-        : 'timeGridWeek'
-    )
+	const viewMode = ref<'timeGridWeek' | 'dayGridMonth'>(
+		storedViewMode === 'timeGridWeek' || storedViewMode === 'dayGridMonth'
+			? storedViewMode
+			: 'timeGridWeek',
+	)
 	/** Date courante affichée dans le calendrier */
 	const currentDate = ref(new Date().toISOString())
 
@@ -211,7 +186,7 @@ export const useCalendarStore = defineStore('calendar', () => {
 	/** Événements CalDAV chargés depuis Radicale (Google + Apple + locaux) */
 	const caldavEvents = ref<CalendarEvent[]>([])
 
-    const subscriptionEvents = ref<CalendarEvent[]>([])
+	const subscriptionEvents = ref<CalendarEvent[]>([])
 
 	/** Événements Vikunja chargés depuis l'API REST */
 	const vikunjaEvents = ref<CalendarEvent[]>([])
@@ -220,39 +195,39 @@ export const useCalendarStore = defineStore('calendar', () => {
 
 	/** Sources actives uniquement */
 	const activeSources = computed(() =>
-		sources.value.filter(s => s.enabled)
+		sources.value.filter(s => s.enabled),
 	)
 
 	/** IDs des sources actives */
 	const activeSourceIds = computed(() =>
-		new Set(activeSources.value.map(s => s.id))
+		new Set(activeSources.value.map(s => s.id)),
 	)
 
 	/** Tous les événements filtrés par sources actives */
 	const allEvents = computed(() => {
-        const all = [
-            ...localEvents.value,
-            ...caldavEvents.value,
-            ...subscriptionEvents.value,
-            ...vikunjaEvents.value,
-        ]
-        return all.filter(e =>
-            activeSourceIds.value.has(e.source) ||
-            e.source.toString().startsWith('sub_')
-        )
-    })
+		const all = [
+			...localEvents.value,
+			...caldavEvents.value,
+			...subscriptionEvents.value,
+			...vikunjaEvents.value,
+		]
+		return all.filter(e =>
+			activeSourceIds.value.has(e.source) ||
+            e.source.toString().startsWith('sub_'),
+		)
+	})
 
 	/** Config CalDAV est-elle renseignée */
 	const isCaldavConfigured = computed(() =>
 		caldavConfig.value.url !== '' &&
 		caldavConfig.value.username !== '' &&
-		caldavConfig.value.password !== ''
+		caldavConfig.value.password !== '',
 	)
 
 	/** Source par ID */
 	function getSource(id: EventSource) {
-        return sources.value.find(s => s.id === id)
-    }
+		return sources.value.find(s => s.id === id)
+	}
 
 	// ── ACTIONS — Événements locaux ────────────
 
@@ -288,9 +263,9 @@ export const useCalendarStore = defineStore('calendar', () => {
 		caldavEvents.value = events
 	}
 
-    function setSubscriptionEvents(events: CalendarEvent[]): void {
-        subscriptionEvents.value = events
-    }
+	function setSubscriptionEvents(events: CalendarEvent[]): void {
+		subscriptionEvents.value = events
+	}
 
 	function setVikunjaEvents(events: CalendarEvent[]): void {
 		vikunjaEvents.value = events
@@ -359,54 +334,38 @@ export const useCalendarStore = defineStore('calendar', () => {
 		saveToStorage(STORAGE_KEYS.mealTimes, times)
 	}
 
-    function addSubscription(sub: Omit<CalendarSubscription, 'id'>): CalendarSubscription {
-		const newSub: CalendarSubscription = {
-			...sub,
-			id: generateId(),
-		}
-		subscriptions.value = [...subscriptions.value, newSub]
-		saveToStorage('calendar_subscriptions', subscriptions.value)
-		return newSub
+	function setSharedSubscriptions(subs: ICalendarSubscription[]): void {
+		sharedSubscriptions.value = subs
 	}
-    
-    function updateSubscription(id: string, updates: Partial<CalendarSubscription>): void {
-    const index = subscriptions.value.findIndex(s => s.id === id)
-    if (index !== -1) {
-        subscriptions.value[index] = { ...subscriptions.value[index], ...updates }
-        saveToStorage('calendar_subscriptions', subscriptions.value)
-    }
-    }
-    
-    function deleteSubscription(id: string): void {
-    subscriptions.value = subscriptions.value.filter(s => s.id !== id)
-    saveToStorage('calendar_subscriptions', subscriptions.value)
-    }
-    
-    function openSubscriptionModal(sub?: CalendarSubscription): void {
-    editingSubscription.value = sub ?? null
-    isSubscriptionModalOpen.value = true
-    }
-    
-    function closeSubscriptionModal(): void {
-    isSubscriptionModalOpen.value = false
-    editingSubscription.value = null
-    }
-    
-    function updateSubscriptionStatus(id: string, status: { lastSync?: string; error?: string }): void {
-    const sub = subscriptions.value.find(s => s.id === id)
-    if (sub) {
-        if (status.lastSync) sub.lastSync = status.lastSync
-        if (status.error !== undefined) sub.error = status.error
-        saveToStorage('calendar_subscriptions', subscriptions.value)
-    }
-    }
 
-	function setSubscriptions(newSubs: CalendarSubscription[]): void {
-    subscriptions.value = newSubs
-    saveToStorage('calendar_subscriptions', subscriptions.value)
-  }
+	function setDisabledSubscriptions(ids: number[]): void {
+		disabledSubscriptionIds.value = ids
+	}
 
-// ── RETURN ─────────────────────────────────
+	function toggleSubscription(id: number): void {
+		const idx = disabledSubscriptionIds.value.indexOf(id)
+		if (idx === -1) {
+			disabledSubscriptionIds.value = [...disabledSubscriptionIds.value, id]
+		} else {
+			disabledSubscriptionIds.value = disabledSubscriptionIds.value.filter(i => i !== id)
+		}
+	}
+
+	function isSubscriptionEnabled(id: number): boolean {
+		return !disabledSubscriptionIds.value.includes(id)
+	}
+
+	function openSubscriptionModal(sub?: ICalendarSubscription): void {
+		editingSubscription.value = sub ?? null
+		isSubscriptionModalOpen.value = true
+	}
+
+	function closeSubscriptionModal(): void {
+		isSubscriptionModalOpen.value = false
+		editingSubscription.value = null
+	}
+
+	// ── RETURN ─────────────────────────────────
 
 	return {
 		// State
@@ -421,8 +380,8 @@ export const useCalendarStore = defineStore('calendar', () => {
 		pendingSlot,
 		isLoading,
 		caldavEvents,
-        subscriptionEvents,
-        setSubscriptionEvents,
+		subscriptionEvents,
+		setSubscriptionEvents,
 		vikunjaEvents,
 
 		// Getters
@@ -461,18 +420,18 @@ export const useCalendarStore = defineStore('calendar', () => {
 		SOURCE_COLORS,
 		SOURCE_LABELS,
 
-        // State
-        subscriptions,
-        isSubscriptionModalOpen,
-        editingSubscription,
+		// Shared subscriptions state
+		sharedSubscriptions,
+		disabledSubscriptionIds,
+		isSubscriptionModalOpen,
+		editingSubscription,
 
-        // Actions
-        addSubscription,
-        updateSubscription,
-        deleteSubscription,
-        openSubscriptionModal,
-        closeSubscriptionModal,
-        updateSubscriptionStatus,
-        setSubscriptions,
+		// Shared subscriptions actions
+		setSharedSubscriptions,
+		setDisabledSubscriptions,
+		toggleSubscription,
+		isSubscriptionEnabled,
+		openSubscriptionModal,
+		closeSubscriptionModal,
 	}
 })

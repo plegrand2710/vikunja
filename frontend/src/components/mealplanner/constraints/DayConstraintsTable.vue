@@ -1,6 +1,8 @@
 <template>
 	<div class="day-constraints">
-		<h3 class="day-constraints__title">Contraintes par jour</h3>
+		<h3 class="day-constraints__title">
+			Contraintes par jour
+		</h3>
 
 		<div class="day-constraints__table">
 			<!-- En-tête -->
@@ -47,7 +49,7 @@
 						step="100"
 						class="day-constraints__input"
 						@change="updateMaxCal(day, $event)"
-					/>
+					>
 					<button
 						v-if="store.constraints.days[day]?.maxCal !== null"
 						class="day-constraints__clear-btn"
@@ -66,7 +68,7 @@
 						:value="store.constraints.days[day]?.mustUseIngredient ?? ''"
 						class="day-constraints__input"
 						@change="updateMustUse(day, $event)"
-					/>
+					>
 					<button
 						v-if="store.constraints.days[day]?.mustUseIngredient"
 						class="day-constraints__clear-btn"
@@ -110,7 +112,7 @@ function updateMustUse(day: string, e: Event) {
 
 <style lang="scss" scoped>
 .day-constraints {
-	background: var(--white, #fff);
+	background: var(--white, #ffffff);
 	border: 1px solid var(--grey-200, #e8e8e8);
 	border-radius: 12px;
 	padding: 1.25rem;
@@ -119,7 +121,7 @@ function updateMustUse(day: string, e: Event) {
 .day-constraints__title {
 	font-size: 1rem;
 	font-weight: 700;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	margin: 0 0 1.25rem;
 }
 
@@ -134,10 +136,10 @@ function updateMustUse(day: string, e: Event) {
 	grid-template-columns: 100px 120px 1fr 1fr;
 	gap: 0.75rem;
 	padding: 0 0.75rem 0.5rem;
-	border-bottom: 1px solid var(--grey-200, #e8e8e8);
+	border-block-end: 1px solid var(--grey-200, #e8e8e8);
 	font-size: 0.75rem;
 	font-weight: 600;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	text-transform: uppercase;
 	letter-spacing: 0.05em;
 }
@@ -156,22 +158,22 @@ function updateMustUse(day: string, e: Event) {
 	}
 
 	&.diet-row--vegan {
-		border-left: 3px solid #10b981;
+		border-inline-start: 3px solid #10b981;
 	}
 
 	&.diet-row--fish {
-		border-left: 3px solid #3b82f6;
+		border-inline-start: 3px solid #3b82f6;
 	}
 
 	&.diet-row--all {
-		border-left: 3px solid #f59e0b;
+		border-inline-start: 3px solid #f59e0b;
 	}
 }
 
 .day-constraints__day-name {
 	font-size: 0.875rem;
 	font-weight: 600;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 }
 
 // ── Sélecteur régime ──────────────────────────
@@ -217,7 +219,7 @@ function updateMustUse(day: string, e: Event) {
 	font-size: 0.8rem;
 	background: var(--grey-50, #fafafa);
 	outline: none;
-	min-width: 0;
+	min-inline-size: 0;
 	transition: border-color 0.15s;
 
 	&:focus {
@@ -226,7 +228,7 @@ function updateMustUse(day: string, e: Event) {
 	}
 
 	&::placeholder {
-		color: var(--grey-400, #bbb);
+		color: var(--grey-400, #bbbbbb);
 		font-size: 0.75rem;
 	}
 }
@@ -234,7 +236,7 @@ function updateMustUse(day: string, e: Event) {
 .day-constraints__clear-btn {
 	background: none;
 	border: none;
-	color: var(--grey-400, #bbb);
+	color: var(--grey-400, #bbbbbb);
 	cursor: pointer;
 	padding: 0.2rem;
 	font-size: 0.75rem;
@@ -249,7 +251,7 @@ function updateMustUse(day: string, e: Event) {
 
 // ── Responsive ────────────────────────────────
 
-@media screen and (max-width: 768px) {
+@media screen and (width <= 768px) {
 	.day-constraints__header,
 	.day-constraints__row {
 		grid-template-columns: 80px 100px 1fr;

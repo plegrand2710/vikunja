@@ -1,6 +1,8 @@
 <template>
 	<div class="constraint-profiles">
-		<h3 class="constraint-profiles__title">Profils</h3>
+		<h3 class="constraint-profiles__title">
+			Profils
+		</h3>
 
 		<p class="constraint-profiles__hint">
 			Sauvegardez vos contraintes actuelles sous un nom pour les réutiliser.
@@ -49,7 +51,7 @@
 				placeholder="Nom du profil (ex: Semaine légère)"
 				class="constraint-profiles__input"
 				@keydown.enter="saveProfile"
-			/>
+			>
 			<button
 				class="constraint-profiles__btn constraint-profiles__btn--save"
 				:disabled="!newProfileName.trim()"
@@ -77,7 +79,7 @@ function saveProfile() {
 
 <style lang="scss" scoped>
 .constraint-profiles {
-	background: var(--white, #fff);
+	background: var(--white, #ffffff);
 	border: 1px solid var(--grey-200, #e8e8e8);
 	border-radius: 12px;
 	padding: 1.25rem;
@@ -86,13 +88,13 @@ function saveProfile() {
 .constraint-profiles__title {
 	font-size: 1rem;
 	font-weight: 700;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	margin: 0 0 0.4rem;
 }
 
 .constraint-profiles__hint {
 	font-size: 0.8rem;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	margin: 0 0 1rem;
 }
 
@@ -100,7 +102,7 @@ function saveProfile() {
 	display: flex;
 	flex-direction: column;
 	gap: 0.4rem;
-	margin-bottom: 1rem;
+	margin-block-end: 1rem;
 }
 
 .constraint-profiles__item {
@@ -116,7 +118,7 @@ function saveProfile() {
 .constraint-profiles__item-name {
 	font-size: 0.875rem;
 	font-weight: 500;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 }
 
 .constraint-profiles__item-actions {
@@ -126,7 +128,7 @@ function saveProfile() {
 
 .constraint-profiles__empty {
 	font-size: 0.8rem;
-	color: var(--grey-400, #bbb);
+	color: var(--grey-400, #bbbbbb);
 	margin: 0 0 1rem;
 	font-style: italic;
 }
@@ -154,7 +156,7 @@ function saveProfile() {
 	padding: 0.4rem 0.75rem;
 	border-radius: 8px;
 	border: 1px solid var(--grey-200, #e8e8e8);
-	background: var(--white, #fff);
+	background: var(--white, #ffffff);
 	font-size: 0.8rem;
 	font-weight: 500;
 	cursor: pointer;
@@ -171,7 +173,7 @@ function saveProfile() {
 	}
 
 	&--delete {
-		color: var(--grey-400, #bbb);
+		color: var(--grey-400, #bbbbbb);
 
 		&:hover {
 			color: var(--danger, #e53e3e);

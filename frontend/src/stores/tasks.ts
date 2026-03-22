@@ -443,15 +443,15 @@ export const useTaskStore = defineStore('task', () => {
 				const taskDefaultsStore = useTaskDefaultsStore()
 				const d = taskDefaultsStore.defaults
 				return taskService.create(new TaskModel({
-				title,
-				projectId,
-				bucketId,
-				position,
-				index,
-				priority: d.priority ?? 0,
-				dueDate: taskDefaultsStore.buildDueDate(),
-				assignees: d.assignees.map(id => ({ id })),
-			}))
+					title,
+					projectId,
+					bucketId,
+					position,
+					index,
+					priority: d.priority ?? 0,
+					dueDate: taskDefaultsStore.buildDueDate(),
+					assignees: d.assignees.map(id => ({ id })),
+				}))
 			} finally {
 				cancel()
 			}
@@ -482,8 +482,8 @@ export const useTaskStore = defineStore('task', () => {
 		const dueDate = parsedTask.date !== null ? new Date(parsedTask.date).toISOString() : null
 	
 		const taskDefaultsStore = useTaskDefaultsStore()
-			const d = taskDefaultsStore.defaults
-			const task = new TaskModel({
+		const d = taskDefaultsStore.defaults
+		const task = new TaskModel({
 			title: cleanedTitle,
 			projectId: foundProjectId,
 			dueDate: dueDate ?? taskDefaultsStore.buildDueDate(),
@@ -515,8 +515,8 @@ export const useTaskStore = defineStore('task', () => {
 				const labelService = new LabelTaskService()
 				for (const labelId of d.labels) {
 					await labelService.create(new LabelTaskModel({
-					taskId: result.id,
-					labelId,
+						taskId: result.id,
+						labelId,
 					}))
 				}
 			}

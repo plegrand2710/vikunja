@@ -37,7 +37,7 @@
 								placeholder="ex: Gratin de courgettes végétarien léger..."
 								class="recipe-form__input"
 								@keydown.enter="handleClaudeGenerate"
-							/>
+							>
 							<button
 								class="recipe-form__btn recipe-form__btn--claude"
 								:disabled="!claudeDescription.trim() || store.isLoading"
@@ -61,7 +61,7 @@
 								type="text"
 								placeholder="Nom de la recette"
 								class="recipe-form__input"
-							/>
+							>
 						</div>
 
 						<!-- Type + Régime -->
@@ -72,10 +72,18 @@
 									v-model="form.slot"
 									class="recipe-form__select"
 								>
-									<option value="any">Indifférent</option>
-									<option value="breakfast">Petit-déjeuner</option>
-									<option value="lunch">Déjeuner</option>
-									<option value="dinner">Dîner</option>
+									<option value="any">
+										Indifférent
+									</option>
+									<option value="breakfast">
+										Petit-déjeuner
+									</option>
+									<option value="lunch">
+										Déjeuner
+									</option>
+									<option value="dinner">
+										Dîner
+									</option>
 								</select>
 							</div>
 							<div class="recipe-form__field">
@@ -104,7 +112,7 @@
 									type="number"
 									min="0"
 									class="recipe-form__input"
-								/>
+								>
 							</div>
 							<div class="recipe-form__field">
 								<label class="recipe-form__label">Préparation (min)</label>
@@ -113,7 +121,7 @@
 									type="number"
 									min="0"
 									class="recipe-form__input"
-								/>
+								>
 							</div>
 							<div class="recipe-form__field">
 								<label class="recipe-form__label">Cuisson (min)</label>
@@ -122,7 +130,7 @@
 									type="number"
 									min="0"
 									class="recipe-form__input"
-								/>
+								>
 							</div>
 							<div class="recipe-form__field">
 								<label class="recipe-form__label">Portions</label>
@@ -131,7 +139,7 @@
 									type="number"
 									min="1"
 									class="recipe-form__input"
-								/>
+								>
 							</div>
 						</div>
 
@@ -175,7 +183,7 @@
 									class="recipe-form__tag-input"
 									@keydown.enter.prevent="addTag"
 									@keydown.comma.prevent="addTag"
-								/>
+								>
 							</div>
 						</div>
 
@@ -193,14 +201,14 @@
 										type="text"
 										placeholder="Ingrédient"
 										class="recipe-form__input recipe-form__input--flex"
-									/>
+									>
 									<input
 										v-model.number="ing.qty"
 										type="number"
 										min="0"
 										placeholder="Qté"
 										class="recipe-form__input recipe-form__input--small"
-									/>
+									>
 									<select
 										v-model="ing.unit"
 										class="recipe-form__select recipe-form__select--small"
@@ -502,8 +510,8 @@ function handleSave() {
 	position: relative;
 	background: white;
 	border-radius: 16px;
-	width: min(680px, 100%);
-	max-height: 90vh;
+	inline-size: min(680px, 100%);
+	max-block-size: 90vh;
 	display: flex;
 	flex-direction: column;
 	box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
@@ -517,13 +525,13 @@ function handleSave() {
 	align-items: center;
 	justify-content: space-between;
 	padding: 1.25rem 1.5rem 1rem;
-	border-bottom: 1px solid var(--grey-200, #e8e8e8);
+	border-block-end: 1px solid var(--grey-200, #e8e8e8);
 	flex-shrink: 0;
 
 	h2 {
 		font-size: 1.1rem;
 		font-weight: 700;
-		color: var(--text, #333);
+		color: var(--text, #333333);
 		margin: 0;
 	}
 }
@@ -535,7 +543,7 @@ function handleSave() {
 	cursor: pointer;
 	padding: 0.25rem 0.5rem;
 	border-radius: 6px;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 
 	&:hover { background: var(--grey-100, #f5f5f5); }
 }
@@ -545,7 +553,7 @@ function handleSave() {
 .recipe-form__claude-section {
 	padding: 1rem 1.5rem;
 	background: #faf5ff;
-	border-bottom: 1px solid #e9d5ff;
+	border-block-end: 1px solid #e9d5ff;
 	flex-shrink: 0;
 }
 
@@ -565,15 +573,15 @@ function handleSave() {
 	display: flex;
 	align-items: center;
 	gap: 0.75rem;
-	margin-top: 0.75rem;
-	color: var(--grey-400, #bbb);
+	margin-block-start: 0.75rem;
+	color: var(--grey-400, #bbbbbb);
 	font-size: 0.78rem;
 
 	&::before,
 	&::after {
 		content: '';
 		flex: 1;
-		height: 1px;
+		block-size: 1px;
 		background: #e9d5ff;
 	}
 }
@@ -598,7 +606,7 @@ function handleSave() {
 .recipe-form__label {
 	font-size: 0.8rem;
 	font-weight: 600;
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
 }
@@ -620,13 +628,13 @@ function handleSave() {
 	font-size: 0.875rem;
 	outline: none;
 	transition: border-color 0.15s;
-	width: 100%;
+	inline-size: 100%;
 	box-sizing: border-box;
 
 	&:focus { border-color: var(--primary, #1973ff); }
 
-	&--flex { flex: 1; width: auto; }
-	&--small { width: 70px; }
+	&--flex { flex: 1; inline-size: auto; }
+	&--small { inline-size: 70px; }
 }
 
 .recipe-form__select {
@@ -637,7 +645,7 @@ function handleSave() {
 	outline: none;
 	background: white;
 
-	&--small { width: 70px; padding: 0.5rem 0.3rem; }
+	&--small { inline-size: 70px; padding: 0.5rem 0.3rem; }
 }
 
 .recipe-form__textarea {
@@ -648,7 +656,7 @@ function handleSave() {
 	outline: none;
 	resize: vertical;
 	font-family: inherit;
-	width: 100%;
+	inline-size: 100%;
 	box-sizing: border-box;
 
 	&:focus { border-color: var(--primary, #1973ff); }
@@ -706,7 +714,7 @@ function handleSave() {
 	padding: 0.4rem;
 	border: 1px solid var(--grey-200, #e8e8e8);
 	border-radius: 8px;
-	min-height: 42px;
+	min-block-size: 42px;
 
 	&:focus-within { border-color: var(--primary, #1973ff); }
 }
@@ -725,7 +733,7 @@ function handleSave() {
 		border: none;
 		cursor: pointer;
 		font-size: 0.7rem;
-		color: var(--grey-400, #bbb);
+		color: var(--grey-400, #bbbbbb);
 		padding: 0;
 		line-height: 1;
 
@@ -737,7 +745,7 @@ function handleSave() {
 	border: none;
 	outline: none;
 	font-size: 0.82rem;
-	min-width: 80px;
+	min-inline-size: 80px;
 	background: transparent;
 }
 
@@ -761,7 +769,7 @@ function handleSave() {
 	font-size: 0.78rem;
 	font-weight: 700;
 	color: var(--primary, #1973ff);
-	min-width: 1.2rem;
+	min-inline-size: 1.2rem;
 	text-align: center;
 }
 
@@ -769,7 +777,7 @@ function handleSave() {
 	background: none;
 	border: none;
 	cursor: pointer;
-	color: var(--grey-400, #bbb);
+	color: var(--grey-400, #bbbbbb);
 	font-size: 0.8rem;
 	padding: 0.2rem 0.35rem;
 	border-radius: 4px;
@@ -780,11 +788,11 @@ function handleSave() {
 
 .recipe-form__add-row-btn {
 	background: none;
-	border: 1px dashed var(--grey-300, #ddd);
+	border: 1px dashed var(--grey-300, #dddddd);
 	border-radius: 6px;
 	padding: 0.4rem 0.75rem;
 	font-size: 0.8rem;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	cursor: pointer;
 	transition: border-color 0.15s, color 0.15s;
 
@@ -801,7 +809,7 @@ function handleSave() {
 	justify-content: flex-end;
 	gap: 0.5rem;
 	padding: 1rem 1.5rem;
-	border-top: 1px solid var(--grey-200, #e8e8e8);
+	border-block-start: 1px solid var(--grey-200, #e8e8e8);
 	flex-shrink: 0;
 }
 
@@ -809,7 +817,7 @@ function handleSave() {
 	padding: 0.5rem 1rem;
 	border-radius: 8px;
 	border: 1px solid var(--grey-200, #e8e8e8);
-	background: var(--white, #fff);
+	background: var(--white, #ffffff);
 	font-size: 0.875rem;
 	font-weight: 500;
 	cursor: pointer;

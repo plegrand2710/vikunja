@@ -120,7 +120,9 @@
 								🔥 {{ recipe.calories }} kcal
 							</span>
 						</div>
-						<p class="inventory-tabs__suggestion-name">{{ recipe.name }}</p>
+						<p class="inventory-tabs__suggestion-name">
+							{{ recipe.name }}
+						</p>
 						<p class="inventory-tabs__suggestion-meta">
 							⏱ {{ recipe.prepTime + recipe.cookTime }} min
 						</p>
@@ -166,7 +168,7 @@ const categoryEmoji: Record<string, string> = {
 
 // Items de l'onglet actif
 const currentItems = computed(() =>
-	activeTab.value === 'fridge' ? store.fridgeItems : store.pantryItems
+	activeTab.value === 'fridge' ? store.fridgeItems : store.pantryItems,
 )
 
 // Catégories présentes dans l'onglet actif
@@ -216,7 +218,7 @@ function saveAndClose(recipe: Recipe) {
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
-	max-width: 900px;
+	max-inline-size: 900px;
 }
 
 // ── Header ────────────────────────────────────
@@ -248,19 +250,19 @@ function saveAndClose(recipe: Recipe) {
 	cursor: pointer;
 	font-size: 0.875rem;
 	font-weight: 500;
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 	transition: background 0.15s, color 0.15s;
 
 	&.is-active {
 		background: white;
-		color: var(--text, #333);
+		color: var(--text, #333333);
 		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 	}
 }
 
 .inventory-tabs__count {
 	background: var(--grey-200, #e8e8e8);
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 	font-size: 0.7rem;
 	font-weight: 700;
 	padding: 0.1rem 0.4rem;
@@ -274,7 +276,7 @@ function saveAndClose(recipe: Recipe) {
 
 .inventory-tabs__claude-btn {
 	padding: 0.45rem 0.9rem;
-	background: var(--white, #fff);
+	background: var(--white, #ffffff);
 	border: 1px solid var(--grey-200, #e8e8e8);
 	border-radius: 8px;
 	font-size: 0.85rem;
@@ -297,7 +299,7 @@ function saveAndClose(recipe: Recipe) {
 // ── Ajout rapide ──────────────────────────────
 
 .inventory-tabs__add {
-	background: var(--white, #fff);
+	background: var(--white, #ffffff);
 	border: 1px solid var(--grey-200, #e8e8e8);
 	border-radius: 12px;
 	padding: 1rem;
@@ -315,7 +317,7 @@ function saveAndClose(recipe: Recipe) {
 	padding: 0.25rem 0.6rem;
 	border-radius: 999px;
 	border: 1px solid var(--grey-200, #e8e8e8);
-	background: var(--white, #fff);
+	background: var(--white, #ffffff);
 	font-size: 0.78rem;
 	cursor: pointer;
 	transition: background 0.15s, border-color 0.15s;
@@ -334,7 +336,7 @@ function saveAndClose(recipe: Recipe) {
 // ── Liste ─────────────────────────────────────
 
 .inventory-tabs__list {
-	background: var(--white, #fff);
+	background: var(--white, #ffffff);
 	border: 1px solid var(--grey-200, #e8e8e8);
 	border-radius: 12px;
 	overflow: hidden;
@@ -346,17 +348,17 @@ function saveAndClose(recipe: Recipe) {
 	gap: 0.75rem;
 	padding: 0.6rem 0.75rem;
 	background: var(--grey-50, #fafafa);
-	border-bottom: 1px solid var(--grey-200, #e8e8e8);
+	border-block-end: 1px solid var(--grey-200, #e8e8e8);
 	font-size: 0.72rem;
 	font-weight: 600;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	text-transform: uppercase;
 	letter-spacing: 0.05em;
 }
 
 .inventory-tabs__empty {
 	text-align: center;
-	color: var(--grey-400, #bbb);
+	color: var(--grey-400, #bbbbbb);
 	font-size: 0.875rem;
 	padding: 2.5rem;
 	margin: 0;
@@ -365,7 +367,7 @@ function saveAndClose(recipe: Recipe) {
 // ── Suggestions Claude ────────────────────────
 
 .inventory-tabs__suggestions {
-	background: var(--white, #fff);
+	background: var(--white, #ffffff);
 	border: 1px solid var(--primary, #1973ff);
 	border-radius: 12px;
 	overflow: hidden;
@@ -377,7 +379,7 @@ function saveAndClose(recipe: Recipe) {
 	justify-content: space-between;
 	padding: 0.75rem 1rem;
 	background: var(--primary-light, #e8f0ff);
-	border-bottom: 1px solid var(--primary, #1973ff);
+	border-block-end: 1px solid var(--primary, #1973ff);
 
 	h4 {
 		font-size: 0.9rem;
@@ -436,24 +438,24 @@ function saveAndClose(recipe: Recipe) {
 
 .inventory-tabs__suggestion-cal {
 	font-size: 0.72rem;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 }
 
 .inventory-tabs__suggestion-name {
 	font-size: 0.875rem;
 	font-weight: 600;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	margin: 0;
 }
 
 .inventory-tabs__suggestion-meta {
 	font-size: 0.75rem;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	margin: 0;
 }
 
 .inventory-tabs__suggestion-save {
-	margin-top: 0.25rem;
+	margin-block-start: 0.25rem;
 	padding: 0.35rem 0.6rem;
 	border: 1px solid var(--primary, #1973ff);
 	border-radius: 6px;

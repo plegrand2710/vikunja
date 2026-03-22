@@ -231,15 +231,15 @@ export const useMealPlannerStore = defineStore('mealPlanner', () => {
 	// qui l'utilisent se re-rendent automatiquement
 
 	const recipes = ref<Recipe[]>(
-		loadFromStorage(STORAGE_KEYS.recipes, [])
+		loadFromStorage(STORAGE_KEYS.recipes, []),
 	)
 
 	const inventory = ref<InventoryItem[]>(
-		loadFromStorage(STORAGE_KEYS.inventory, [])
+		loadFromStorage(STORAGE_KEYS.inventory, []),
 	)
 
 	const weekPlan = ref<WeekPlan>(
-		loadFromStorage(STORAGE_KEYS.weekPlan, emptyWeekPlan())
+		loadFromStorage(STORAGE_KEYS.weekPlan, emptyWeekPlan()),
 	)
 
 	const constraints = ref<Constraints>(
@@ -250,7 +250,7 @@ export const useMealPlannerStore = defineStore('mealPlanner', () => {
 			},
 			days: defaultDayConstraints(),
 			profiles: [],
-		})
+		}),
 	)
 
 	// Section active dans la navigation
@@ -272,17 +272,17 @@ export const useMealPlannerStore = defineStore('mealPlanner', () => {
 
 	/** Recette sélectionnée */
 	const selectedRecipe = computed(() =>
-		recipes.value.find(r => r.id === selectedRecipeId.value) ?? null
+		recipes.value.find(r => r.id === selectedRecipeId.value) ?? null,
 	)
 
 	/** Items du frigo uniquement */
 	const fridgeItems = computed(() =>
-		inventory.value.filter(item => item.location === 'fridge')
+		inventory.value.filter(item => item.location === 'fridge'),
 	)
 
 	/** Items du placard uniquement */
 	const pantryItems = computed(() =>
-		inventory.value.filter(item => item.location === 'pantry')
+		inventory.value.filter(item => item.location === 'pantry'),
 	)
 
 	/** Items proches de péremption (< 3 jours) */
@@ -347,9 +347,9 @@ export const useMealPlannerStore = defineStore('mealPlanner', () => {
 			recipe.ingredients.every(ingredient =>
 				inventoryNames.some(name =>
 					name.includes(ingredient.name.toLowerCase()) ||
-					ingredient.name.toLowerCase().includes(name)
-				)
-			)
+					ingredient.name.toLowerCase().includes(name),
+				),
+			),
 		)
 	})
 

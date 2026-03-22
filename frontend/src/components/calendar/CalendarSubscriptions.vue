@@ -13,7 +13,7 @@
 				<div class="cal-subs__panel">
 					<!-- Header -->
 					<div class="cal-subs__header">
-						<h3>Abonnements calendrier</h3>
+						<h3>Abonnements calendrier partagés</h3>
 						<button
 							class="cal-subs__close"
 							@click="emit('close')"
@@ -22,20 +22,26 @@
 						</button>
 					</div>
 
-					<!-- Liste des abonnements existants -->
+					<!-- Liste des abonnements -->
 					<div class="cal-subs__list">
 						<div
-							v-if="store.subscriptions.length === 0"
+							v-if="isListLoading"
 							class="cal-subs__empty"
 						>
-							Aucun abonnement. Ajoutez votre premier calendrier externe.
+							Chargement…
+						</div>
+						<div
+							v-else-if="subscriptions.length === 0"
+							class="cal-subs__empty"
+						>
+							Aucun abonnement partagé. Ajoutez le premier calendrier externe.
 						</div>
 
 						<div
-							v-for="sub in store.subscriptions"
+							v-for="sub in subscriptions"
 							:key="sub.id"
 							class="cal-subs__item"
-							:class="{ 'is-disabled': !sub.enabled }"
+							:class="{ 'is-disabled': !store.isSubscriptionEnabled(sub.id) }"
 						>
 							<div
 								class="cal-subs__item-color"
@@ -44,27 +50,15 @@
 							<div class="cal-subs__item-info">
 								<span class="cal-subs__item-name">{{ sub.name }}</span>
 								<span class="cal-subs__item-type">{{ typeLabel[sub.type] }}</span>
-								<span
-									v-if="sub.lastSync"
-									class="cal-subs__item-sync"
-								>
-									Sync {{ formatSyncTime(sub.lastSync) }}
-								</span>
-								<span
-									v-if="sub.error"
-									class="cal-subs__item-error"
-									:title="sub.error"
-								>
-									⚠️ {{ sub.error }}
-								</span>
+								<span class="cal-subs__item-shared">Partagé avec tous</span>
 							</div>
 							<div class="cal-subs__item-actions">
 								<button
 									class="cal-subs__item-btn"
-									:title="sub.enabled ? 'Désactiver' : 'Activer'"
-									@click="handleToggle(sub.id, sub.enabled)"
+									:title="store.isSubscriptionEnabled(sub.id) ? 'Masquer pour moi' : 'Afficher pour moi'"
+									@click="handleToggle(sub.id)"
 								>
-									{{ sub.enabled ? '👁️' : '🙈' }}
+									{{ store.isSubscriptionEnabled(sub.id) ? '👁️' : '🙈' }}
 								</button>
 								<button
 									class="cal-subs__item-btn"
@@ -75,7 +69,7 @@
 								</button>
 								<button
 									class="cal-subs__item-btn cal-subs__item-btn--danger"
-									title="Supprimer"
+									title="Supprimer pour tous"
 									@click="handleDelete(sub.id, sub.name)"
 								>
 									🗑️
@@ -90,7 +84,7 @@
 						class="cal-subs__add-btn"
 						@click="showForm = true"
 					>
-						+ Ajouter un abonnement
+						+ Ajouter un abonnement partagé
 					</button>
 
 					<!-- Formulaire d'ajout/édition -->
@@ -133,7 +127,7 @@
 									type="text"
 									:placeholder="namePlaceholder"
 									class="cal-subs__input"
-								/>
+								>
 							</div>
 							<div class="cal-subs__field cal-subs__field--small">
 								<label>Couleur</label>
@@ -152,8 +146,43 @@
 
 						<!-- Champs selon le type -->
 
-						<!-- CalDAV direct -->
-						<template v-if="form.type === 'caldav'">
+						<!-- ICS -->
+						<template v-if="form.type === 'ics'">
+							<div class="cal-subs__field">
+								<label>URL ICS *</label>
+								<input
+									v-model="form.url"
+									type="text"
+									placeholder="https://example.com/calendrier.ics"
+									class="cal-subs__input"
+								>
+							</div>
+							<div class="cal-subs__info">
+								📖 Lecture seule — les événements sont importés mais non modifiables. Les credentials optionnels permettent les ICS protégés par mot de passe.
+							</div>
+							<div class="cal-subs__row">
+								<div class="cal-subs__field">
+									<label>Utilisateur (optionnel)</label>
+									<input
+										v-model="form.username"
+										type="text"
+										class="cal-subs__input"
+									>
+								</div>
+								<div class="cal-subs__field">
+									<label>Mot de passe (optionnel)</label>
+									<input
+										v-model="form.password"
+										type="password"
+										:placeholder="editingId ? '(inchangé si vide)' : ''"
+										class="cal-subs__input"
+									>
+								</div>
+							</div>
+						</template>
+
+						<!-- CalDAV -->
+						<template v-else-if="form.type === 'caldav'">
 							<div class="cal-subs__field">
 								<label>URL CalDAV *</label>
 								<input
@@ -161,29 +190,30 @@
 									type="text"
 									placeholder="https://cloud.example.com/remote.php/dav/calendars/alice/"
 									class="cal-subs__input"
-								/>
+								>
 							</div>
 							<div class="cal-subs__row">
 								<div class="cal-subs__field">
-									<label>Utilisateur</label>
+									<label>Utilisateur *</label>
 									<input
 										v-model="form.username"
 										type="text"
 										class="cal-subs__input"
-									/>
+									>
 								</div>
 								<div class="cal-subs__field">
-									<label>Mot de passe</label>
+									<label>Mot de passe *</label>
 									<input
 										v-model="form.password"
 										type="password"
+										:placeholder="editingId ? '(inchangé si vide)' : ''"
 										class="cal-subs__input"
-									/>
+									>
 								</div>
 							</div>
 						</template>
 
-						<!-- Apple Calendar -->
+						<!-- Apple -->
 						<template v-else-if="form.type === 'apple'">
 							<div class="cal-subs__info">
 								🔑 Utilise un <strong>mot de passe spécifique à l'app</strong> généré sur
@@ -193,83 +223,32 @@
 								>appleid.apple.com</a>
 								→ Sécurité → Mots de passe spécifiques aux apps.
 							</div>
-							<div class="cal-subs__field">
-								<label>Apple ID *</label>
-								<input
-									v-model="form.appleUsername"
-									type="email"
-									placeholder="alice@icloud.com"
-									class="cal-subs__input"
-								/>
-							</div>
-							<div class="cal-subs__field">
-								<label>App-specific password *</label>
-								<input
-									v-model="form.applePassword"
-									type="password"
-									placeholder="xxxx-xxxx-xxxx-xxxx"
-									class="cal-subs__input"
-								/>
-							</div>
-						</template>
-
-						<!-- Google Calendar -->
-						<template v-else-if="form.type === 'google'">
-							<div class="cal-subs__info">
-								⚙️ Google Calendar nécessite une configuration côté serveur via Vdirsyncer.
-								Renseigne tes identifiants OAuth et suis les instructions générées.
-							</div>
-							<div class="cal-subs__field">
-								<label>Client ID *</label>
-								<input
-									v-model="form.googleClientId"
-									type="text"
-									placeholder="xxxx.apps.googleusercontent.com"
-									class="cal-subs__input"
-								/>
-							</div>
-							<div class="cal-subs__field">
-								<label>Client Secret *</label>
-								<input
-									v-model="form.googleClientSecret"
-									type="password"
-									class="cal-subs__input"
-								/>
-							</div>
-
-							<!-- Config Vdirsyncer générée -->
-							<div
-								v-if="form.googleClientId && form.googleClientSecret && form.name"
-								class="cal-subs__vdirsyncer"
-							>
-								<div class="cal-subs__vdirsyncer-header">
-									<span>Config Vdirsyncer à ajouter sur NixOS</span>
-									<button
-										class="cal-subs__copy-btn"
-										@click="copyVdirsyncerConfig"
+							<div class="cal-subs__row">
+								<div class="cal-subs__field">
+									<label>Apple ID *</label>
+									<input
+										v-model="form.username"
+										type="email"
+										placeholder="alice@icloud.com"
+										class="cal-subs__input"
 									>
-										{{ copied ? '✓ Copié' : '📋 Copier' }}
-									</button>
 								</div>
-								<pre class="cal-subs__vdirsyncer-code">{{ vdirsyncerConfig }}</pre>
+								<div class="cal-subs__field">
+									<label>App-specific password *</label>
+									<input
+										v-model="form.password"
+										type="password"
+										:placeholder="editingId ? '(inchangé si vide)' : 'xxxx-xxxx-xxxx-xxxx'"
+										class="cal-subs__input"
+									>
+								</div>
 							</div>
 						</template>
 
-						<!-- ICS lecture seule -->
-						<template v-else-if="form.type === 'ics'">
-							<div class="cal-subs__field">
-								<label>URL ICS *</label>
-								<input
-									v-model="form.icsUrl"
-									type="text"
-									placeholder="https://example.com/calendrier.ics"
-									class="cal-subs__input"
-								/>
-							</div>
-							<div class="cal-subs__info">
-								📖 Lecture seule — les événements sont importés mais non modifiables.
-							</div>
-						</template>
+						<!-- Info sécurité -->
+						<div class="cal-subs__security-info">
+							🔒 Les identifiants sont chiffrés sur le serveur. La récupération des événements est effectuée par le serveur — vos credentials ne passent jamais dans le navigateur.
+						</div>
 
 						<!-- Test + résultat -->
 						<div
@@ -277,24 +256,17 @@
 							class="cal-subs__test-result"
 							:class="testResult ? 'is-success' : 'is-error'"
 						>
-							{{ testResult ? '✅ Connexion réussie !' : `❌ ${subs.error.value}` }}
+							{{ testResult ? '✅ Connexion réussie !' : `❌ ${testError}` }}
 						</div>
 
 						<!-- Footer du formulaire -->
 						<div class="cal-subs__form-footer">
 							<button
 								class="cal-subs__btn"
-								:disabled="!canTest || subs.isLoading.value"
-								@click="handleTest"
-							>
-								{{ subs.isLoading.value ? 'Test...' : 'Tester' }}
-							</button>
-							<button
-								class="cal-subs__btn cal-subs__btn--primary"
-								:disabled="!canSave"
+								:disabled="!canSave || isSaving"
 								@click="handleSave"
 							>
-								{{ editingId ? 'Enregistrer' : 'Ajouter' }}
+								{{ isSaving ? 'Enregistrement…' : editingId ? 'Enregistrer' : 'Ajouter' }}
 							</button>
 						</div>
 					</div>
@@ -305,200 +277,172 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useCalendarStore } from '@/stores/calendar'
-import { useSubscriptions } from '@/composables/useSubscriptions'
-import type { CalendarSubscription, SubscriptionType } from '@/stores/calendar'
-import { useVikunjaSettings } from '@/composables/useVikunjaSettings'
 import { useCalendarSources } from '@/composables/useCalendarSources'
+import { useVikunjaSettings } from '@/composables/useVikunjaSettings'
+import type { ICalendarSubscription } from '@/modelTypes/ICalendarSubscription'
+import CalendarSubscriptionService from '@/services/calendarSubscription'
 
 defineProps<{ isOpen: boolean }>()
 const emit = defineEmits<{ (e: 'close'): void; (e: 'refresh'): void }>()
 
 const store = useCalendarStore()
-const subs = useSubscriptions()
-const vikunjaSettings = useVikunjaSettings()
 const calendarSources = useCalendarSources()
-
-let saveTimer: ReturnType<typeof setTimeout> | null = null
-watch(
-  () => store.subscriptions,
-  () => {
-    if (saveTimer) clearTimeout(saveTimer)
-    saveTimer = setTimeout(() => {
-      vikunjaSettings.saveSubscriptions()
-    }, 1000)
-  },
-  { deep: true }
-)
+const vikunjaSettings = useVikunjaSettings()
+const service = new CalendarSubscriptionService()
 
 // ── Constantes ────────────────────────────────
 
-const TYPES: { value: SubscriptionType; label: string; icon: string }[] = [
-  { value: 'caldav', label: 'CalDAV', icon: '🌐' },
-  { value: 'apple', label: 'Apple', icon: '🍎' },
-  { value: 'ics', label: 'ICS', icon: '📅' },
+const TYPES: { value: ICalendarSubscription['type']; label: string; icon: string }[] = [
+	{ value: 'ics', label: 'ICS', icon: '📅' },
+	{ value: 'caldav', label: 'CalDAV', icon: '🌐' },
+	{ value: 'apple', label: 'Apple', icon: '🍎' },
 ]
 
-const typeLabel: Record<SubscriptionType, string> = {
-  caldav: '🌐 CalDAV',
-  google: '🔴 Google (ICS)',
-  apple: '🍎 Apple',
-  ics: '📅 ICS (lecture seule)',
+const typeLabel: Record<ICalendarSubscription['type'], string> = {
+	ics: '📅 ICS (lecture seule)',
+	caldav: '🌐 CalDAV',
+	apple: '🍎 Apple Calendar',
 }
 
 const COLORS = [
-  '#ea4335', '#1973ff', '#10b981', '#f59e0b',
-  '#7c3aed', '#ec4899', '#06b6d4', '#555555',
+	'#ea4335', '#1973ff', '#10b981', '#f59e0b',
+	'#7c3aed', '#ec4899', '#06b6d4', '#555555',
 ]
 
-// ── État du formulaire ────────────────────────
+// ── État ──────────────────────────────────────
 
+const subscriptions = ref<ICalendarSubscription[]>([])
+const isListLoading = ref(false)
 const showForm = ref(false)
-const editingId = ref<string | null>(null)
+const editingId = ref<number | null>(null)
 const testResult = ref<boolean | null>(null)
-const copied = ref(false)
+const testError = ref('')
+const isSaving = ref(false)
 
 const form = reactive({
-  type: 'caldav' as SubscriptionType,
-  name: '',
-  color: COLORS[0],
-  enabled: true,
-  url: '',
-  username: '',
-  password: '',
-  icsUrl: '',
-  googleClientId: '',
-  googleClientSecret: '',
-  appleUsername: '',
-  applePassword: '',
+	type: 'ics' as ICalendarSubscription['type'],
+	name: '',
+	color: COLORS[0],
+	url: '',
+	username: '',
+	password: '',
 })
 
 // ── Computed ──────────────────────────────────
 
 const namePlaceholder = computed(() => ({
-  caldav: 'Mon Nextcloud',
-  google: 'Google Pro',
-  apple: 'iCloud Perso',
-  ics: 'Jours fériés',
+	ics: 'Jours fériés',
+	caldav: 'Mon Nextcloud',
+	apple: 'iCloud Perso',
 }[form.type]))
 
-const canTest = computed(() => {
-  if (!form.name.trim()) return false
-  if (form.type === 'caldav') return !!form.url
-  if (form.type === 'apple') return !!form.appleUsername && !!form.applePassword
-  if (form.type === 'ics') return !!form.icsUrl
-  if (form.type === 'google') return !!form.googleClientId && !!form.googleClientSecret
-  return false
+const canSave = computed(() => {
+	if (!form.name.trim()) return false
+	if (form.type === 'ics') return !!form.url.trim()
+	if (form.type === 'caldav') return !!form.url.trim()
+	if (form.type === 'apple') return !!form.username.trim()
+	return false
 })
 
-const canSave = computed(() => canTest.value)
+// ── Chargement ────────────────────────────────
 
-const vdirsyncerConfig = computed(() => {
-  if (form.type !== 'google') return ''
-  return subs.generateVdirsyncerConfig({
-    id: editingId.value ?? 'new',
-    name: form.name,
-    type: 'google',
-    color: form.color,
-    enabled: true,
-    googleClientId: form.googleClientId,
-    googleClientSecret: form.googleClientSecret,
-  })
-})
+async function loadSubscriptions() {
+	isListLoading.value = true
+	try {
+		subscriptions.value = await service.getAll()
+		store.setSharedSubscriptions(subscriptions.value)
+	} catch (e) {
+		console.error('[CalendarSubscriptions] Failed to load:', e)
+	} finally {
+		isListLoading.value = false
+	}
+}
+
+onMounted(loadSubscriptions)
 
 // ── Helpers ───────────────────────────────────
 
-function formatSyncTime(isoDate: string): string {
-  const diff = Math.floor((Date.now() - new Date(isoDate).getTime()) / 1000 / 60)
-  if (diff < 1) return 'à l\'instant'
-  if (diff < 60) return `il y a ${diff}min`
-  return `il y a ${Math.floor(diff / 60)}h`
+function resetForm() {
+	showForm.value = false
+	editingId.value = null
+	testResult.value = null
+	testError.value = ''
+	form.type = 'ics'
+	form.name = ''
+	form.color = COLORS[0]
+	form.url = ''
+	form.username = ''
+	form.password = ''
 }
 
-function resetForm()
-{
-  showForm.value = false
-  editingId.value = null
-  testResult.value = null
-  form.type = 'caldav'
-  form.name = ''
-  form.color = COLORS[0]
-  form.url = ''
-  form.username = ''
-  form.password = ''
-  form.icsUrl = ''
-  form.googleClientId = ''
-  form.googleClientSecret = ''
-  form.appleUsername = ''
-  form.applePassword = ''
+function handleEdit(sub: ICalendarSubscription) {
+	editingId.value = sub.id
+	form.type = sub.type
+	form.name = sub.name
+	form.color = sub.color
+	form.url = sub.url ?? ''
+	form.username = '' // never pre-filled for security
+	form.password = '' // never pre-filled for security
+	showForm.value = true
+	testResult.value = null
 }
 
-function handleEdit(sub: CalendarSubscription) {
-  editingId.value = sub.id
-  form.type = sub.type
-  form.name = sub.name
-  form.color = sub.color
-  form.url = sub.url ?? ''
-  form.username = sub.username ?? ''
-  form.password = sub.password ?? ''
-  form.icsUrl = sub.icsUrl ?? ''
-  form.googleClientId = sub.googleClientId ?? ''
-  form.googleClientSecret = sub.googleClientSecret ?? ''
-  form.appleUsername = sub.appleUsername ?? ''
-  form.applePassword = sub.applePassword ?? ''
-  showForm.value = true
-  testResult.value = null
+async function handleDelete(id: number, name: string) {
+	if (!confirm(`Supprimer l'abonnement "${name}" pour tout le monde ?`)) return
+	try {
+		await service.delete({ id } as ICalendarSubscription)
+		await loadSubscriptions()
+		await calendarSources.loadAllSources()
+		emit('refresh')
+	} catch (e) {
+		console.error('[CalendarSubscriptions] Delete failed:', e)
+	}
 }
 
-function handleDelete(id: string, name: string) {
-  if (confirm(`Supprimer l'abonnement "${name}" ?`)) {
-    store.deleteSubscription(id)
-  }
-}
-
-function handleToggle(id: string, enabled: boolean) {
-  store.updateSubscription(id, { enabled: !enabled })
-}
-
-async function handleTest() {
-  testResult.value = await subs.testSubscription({ ...form })
+async function handleToggle(id: number) {
+	store.toggleSubscription(id)
+	await vikunjaSettings.saveDisabledSubscriptions()
+	await calendarSources.loadAllSources()
+	emit('refresh')
 }
 
 async function handleSave() {
-  try {
-    const subData = {
-      name: form.name,
-      type: form.type,
-      color: form.color,
-      enabled: true,
-      url: form.url || undefined,
-      username: form.username || undefined,
-      password: form.password || undefined,
-      icsUrl: form.icsUrl || undefined,
-      googleClientId: form.googleClientId || undefined,
-      googleClientSecret: form.googleClientSecret || undefined,
-      appleUsername: form.appleUsername || undefined,
-      applePassword: form.applePassword || undefined,
-    }
-    if (editingId.value) {
-      store.updateSubscription(editingId.value, subData)
-    } else {
-      store.addSubscription(subData)
-    }
-    resetForm()
-    await calendarSources.loadAllSources()
-    emit('refresh')
-  } catch(e) {
-    console.error('[handleSave] ERREUR:', e)
-  }
+	isSaving.value = true
+	testResult.value = null
+	testError.value = ''
+
+	try {
+		const payload: Partial<ICalendarSubscription> = {
+			name: form.name,
+			type: form.type,
+			color: form.color,
+			url: form.url || undefined,
+			username: form.username || undefined,
+			password: form.password || undefined,
+		}
+
+		if (editingId.value !== null) {
+			await service.update({ id: editingId.value, ...payload } as ICalendarSubscription)
+		} else {
+			await service.create(payload as ICalendarSubscription)
+		}
+
+		await loadSubscriptions()
+		resetForm()
+		await calendarSources.loadAllSources()
+		emit('refresh')
+	} catch (e) {
+		testError.value = e instanceof Error ? e.message : 'Erreur lors de la sauvegarde'
+		testResult.value = false
+	} finally {
+		isSaving.value = false
+	}
 }
 
-async function copyVdirsyncerConfig() {
-  await navigator.clipboard.writeText(vdirsyncerConfig.value)
-  copied.value = true
-  setTimeout(() => { copied.value = false }, 2000)
-}
+// Sync toggle state from settings on open
+watch(() => store.disabledSubscriptionIds, () => {}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>
@@ -522,8 +466,8 @@ async function copyVdirsyncerConfig() {
   position: relative;
   background: var(--content-background, white);
   border-radius: 16px;
-  width: min(560px, 100%);
-  max-height: 85vh;
+  inline-size: min(560px, 100%);
+  max-block-size: 85vh;
   display: flex;
   flex-direction: column;
   box-shadow: 0 16px 48px rgba(0,0,0,0.25);
@@ -537,14 +481,14 @@ async function copyVdirsyncerConfig() {
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 1.5rem 1rem;
-  border-bottom: 1px solid var(--grey-200, #e8e8e8);
+  border-block-end: 1px solid var(--grey-200, #e8e8e8);
   flex-shrink: 0;
 
   h3 {
     font-size: 1rem;
     font-weight: 700;
     margin: 0;
-    color: var(--text, #fff);
+    color: var(--text, #ffffff);
   }
 }
 
@@ -555,7 +499,7 @@ async function copyVdirsyncerConfig() {
   cursor: pointer;
   padding: 0.25rem 0.5rem;
   border-radius: 6px;
-  color: var(--grey-500, #888);
+  color: var(--grey-500, #888888);
 
   &:hover { background: var(--grey-100, rgba(255,255,255,0.1)); }
 }
@@ -573,7 +517,7 @@ async function copyVdirsyncerConfig() {
 
 .cal-subs__empty {
   text-align: center;
-  color: var(--grey-500, #888);
+  color: var(--grey-500, #888888);
   font-size: 0.875rem;
   padding: 1.5rem 0;
   font-style: italic;
@@ -595,8 +539,8 @@ async function copyVdirsyncerConfig() {
 }
 
 .cal-subs__item-color {
-  width: 12px;
-  height: 12px;
+  inline-size: 12px;
+  block-size: 12px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -606,13 +550,13 @@ async function copyVdirsyncerConfig() {
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
-  min-width: 0;
+  min-inline-size: 0;
 }
 
 .cal-subs__item-name {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text, #fff);
+  color: var(--text, #ffffff);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -620,17 +564,13 @@ async function copyVdirsyncerConfig() {
 
 .cal-subs__item-type {
   font-size: 0.72rem;
-  color: var(--grey-500, #888);
+  color: var(--grey-500, #888888);
 }
 
-.cal-subs__item-sync {
+.cal-subs__item-shared {
   font-size: 0.7rem;
-  color: var(--grey-400, #bbb);
-}
-
-.cal-subs__item-error {
-  font-size: 0.7rem;
-  color: var(--danger, #e53e3e);
+  color: var(--primary, #1973ff);
+  font-style: italic;
 }
 
 .cal-subs__item-actions {
@@ -657,10 +597,10 @@ async function copyVdirsyncerConfig() {
 .cal-subs__add-btn {
   margin: 0.75rem 1.25rem 1rem;
   padding: 0.6rem;
-  border: 2px dashed var(--grey-300, #555);
+  border: 2px dashed var(--grey-300, #555555);
   border-radius: 10px;
   background: transparent;
-  color: var(--grey-500, #888);
+  color: var(--grey-500, #888888);
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
@@ -675,13 +615,13 @@ async function copyVdirsyncerConfig() {
 // ── Formulaire ────────────────────────────────
 
 .cal-subs__form {
-  border-top: 1px solid var(--grey-200, #e8e8e8);
+  border-block-start: 1px solid var(--grey-200, #e8e8e8);
   padding: 1rem 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
   overflow-y: auto;
-  max-height: 55vh;
+  max-block-size: 55vh;
 }
 
 .cal-subs__form-header {
@@ -693,7 +633,7 @@ async function copyVdirsyncerConfig() {
     font-size: 0.9rem;
     font-weight: 700;
     margin: 0;
-    color: var(--text, #fff);
+    color: var(--text, #ffffff);
   }
 }
 
@@ -705,7 +645,7 @@ async function copyVdirsyncerConfig() {
   label {
     font-size: 0.75rem;
     font-weight: 600;
-    color: var(--grey-500, #888);
+    color: var(--grey-500, #888888);
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
@@ -721,16 +661,16 @@ async function copyVdirsyncerConfig() {
 
 .cal-subs__input {
   padding: 0.5rem 0.75rem;
-  border: 1px solid var(--grey-300, #444);
+  border: 1px solid var(--grey-300, #444444);
   border-radius: 8px;
   font-size: 0.875rem;
   outline: none;
   background: var(--grey-100, rgba(255,255,255,0.05));
-  color: var(--text, #fff);
+  color: var(--text, #ffffff);
   transition: border-color 0.15s;
 
   &:focus { border-color: var(--primary, #1973ff); }
-  &::placeholder { color: var(--grey-500, #666); }
+  &::placeholder { color: var(--grey-500, #666666); }
 }
 
 // ── Type buttons ──────────────────────────────
@@ -743,11 +683,11 @@ async function copyVdirsyncerConfig() {
 .cal-subs__type-btn {
   padding: 0.4rem 0.75rem;
   border-radius: 8px;
-  border: 1px solid var(--grey-300, #444);
+  border: 1px solid var(--grey-300, #444444);
   background: transparent;
   cursor: pointer;
   font-size: 0.82rem;
-  color: var(--grey-500, #888);
+  color: var(--grey-500, #888888);
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 
   &:hover { background: rgba(255,255,255,0.05); }
@@ -763,73 +703,47 @@ async function copyVdirsyncerConfig() {
 .cal-subs__colors {
   display: flex;
   gap: 0.4rem;
+  flex-wrap: wrap;
 }
 
 .cal-subs__color-btn {
-  width: 1.4rem;
-  height: 1.4rem;
+  inline-size: 1.4rem;
+  block-size: 1.4rem;
   border-radius: 50%;
   border: 2px solid transparent;
   cursor: pointer;
   transition: transform 0.1s, border-color 0.1s;
 
   &:hover { transform: scale(1.15); }
-  &.is-active { border-color: var(--text, #fff); transform: scale(1.15); }
+  &.is-active {
+    border-color: var(--text, #ffffff);
+    transform: scale(1.15);
+  }
 }
 
 // ── Info ──────────────────────────────────────
 
 .cal-subs__info {
   font-size: 0.8rem;
-  color: var(--grey-500, #888);
+  color: var(--grey-500, #888888);
   padding: 0.6rem 0.75rem;
   background: rgba(255,255,255,0.04);
   border-radius: 8px;
-  border-left: 3px solid var(--primary, #1973ff);
+  border-inline-start: 3px solid var(--primary, #1973ff);
   line-height: 1.5;
 
   a { color: var(--primary, #1973ff); }
-  strong { color: var(--text, #fff); }
+  strong { color: var(--text, #ffffff); }
 }
 
-// ── Vdirsyncer config ─────────────────────────
-
-.cal-subs__vdirsyncer {
-  background: rgba(0,0,0,0.2);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.cal-subs__vdirsyncer-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.cal-subs__security-info {
+  font-size: 0.78rem;
+  color: var(--grey-500, #888888);
   padding: 0.5rem 0.75rem;
-  background: rgba(255,255,255,0.05);
-  font-size: 0.75rem;
-  color: var(--grey-500, #888);
-}
-
-.cal-subs__copy-btn {
-  background: none;
-  border: none;
-  color: var(--primary, #1973ff);
-  cursor: pointer;
-  font-size: 0.75rem;
-  padding: 0.15rem 0.4rem;
-  border-radius: 4px;
-
-  &:hover { background: rgba(25,115,255,0.1); }
-}
-
-.cal-subs__vdirsyncer-code {
-  font-size: 0.72rem;
-  padding: 0.75rem;
-  margin: 0;
-  overflow-x: auto;
-  color: #10b981;
-  font-family: 'Courier New', monospace;
-  white-space: pre;
+  background: rgba(16,185,129,0.06);
+  border-radius: 8px;
+  border-inline-start: 3px solid #10b981;
+  line-height: 1.5;
 }
 
 // ── Test result ───────────────────────────────
@@ -840,8 +754,14 @@ async function copyVdirsyncerConfig() {
   font-size: 0.875rem;
   font-weight: 500;
 
-  &.is-success { background: rgba(16,185,129,0.15); color: #10b981; }
-  &.is-error { background: rgba(229,62,62,0.15); color: #e53e3e; }
+  &.is-success {
+    background: rgba(16,185,129,0.15);
+    color: #10b981;
+  }
+  &.is-error {
+    background: rgba(229,62,62,0.15);
+    color: #e53e3e;
+  }
 }
 
 // ── Footer formulaire ─────────────────────────
@@ -855,16 +775,19 @@ async function copyVdirsyncerConfig() {
 .cal-subs__btn {
   padding: 0.45rem 0.9rem;
   border-radius: 8px;
-  border: 1px solid var(--grey-300, #444);
+  border: 1px solid var(--grey-300, #444444);
   background: transparent;
-  color: var(--text, #fff);
+  color: var(--text, #ffffff);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.15s;
 
   &:hover:not(:disabled) { background: rgba(255,255,255,0.08); }
-  &:disabled { opacity: 0.4; cursor: not-allowed; }
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
 
   &--primary {
     background: var(--primary, #1973ff);

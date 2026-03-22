@@ -219,7 +219,7 @@ function uncheckAll() {
 /** Importe les items cochés dans l'inventaire */
 function importCheckedToInventory() {
 	const itemsToImport = store.shoppingList.filter(i =>
-		checkedItems.value.has(i.name)
+		checkedItems.value.has(i.name),
 	)
 
 	for (const item of itemsToImport) {
@@ -276,7 +276,7 @@ async function handleCreateVikunjaTask() {
 			toBuy: item.toBuy,
 			unit: item.unit,
 			category: item.category,
-		}))
+		})),
 	)
 
 	if (task) {
@@ -291,7 +291,7 @@ async function handleCreateVikunjaTask() {
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
-	max-width: 700px;
+	max-inline-size: 700px;
 }
 
 // ── Toolbar ───────────────────────────────────
@@ -306,12 +306,12 @@ async function handleCreateVikunjaTask() {
 
 .shopping-list__info {
 	font-size: 0.875rem;
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 }
 
 .shopping-list__count {
 	font-weight: 600;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 }
 
 .shopping-list__checked-count {
@@ -373,13 +373,13 @@ async function handleCreateVikunjaTask() {
 	p {
 		font-size: 0.95rem;
 		font-weight: 500;
-		color: var(--text, #333);
+		color: var(--text, #333333);
 		margin: 0;
 	}
 }
 
 .shopping-list__empty-hint {
-	color: var(--grey-500, #888) !important;
+	color: var(--grey-500, #888888) !important;
 	font-size: 0.82rem !important;
 	font-weight: 400 !important;
 }
@@ -406,7 +406,7 @@ async function handleCreateVikunjaTask() {
 }
 
 .shopping-list__separator {
-	color: var(--grey-300, #ddd);
+	color: var(--grey-300, #dddddd);
 }
 
 // ── Groupes ───────────────────────────────────
@@ -430,7 +430,7 @@ async function handleCreateVikunjaTask() {
 	gap: 0.6rem;
 	padding: 0.65rem 1rem;
 	background: var(--grey-50, #fafafa);
-	border-bottom: 1px solid var(--grey-200, #e8e8e8);
+	border-block-end: 1px solid var(--grey-200, #e8e8e8);
 }
 
 .shopping-list__group-icon {
@@ -440,14 +440,14 @@ async function handleCreateVikunjaTask() {
 .shopping-list__group-name {
 	font-size: 0.875rem;
 	font-weight: 700;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	flex: 1;
 }
 
 .shopping-list__group-count {
 	font-size: 0.72rem;
 	background: var(--grey-200, #e8e8e8);
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 	padding: 0.1rem 0.4rem;
 	border-radius: 999px;
 	font-weight: 600;
@@ -467,9 +467,9 @@ async function handleCreateVikunjaTask() {
 	padding: 0.6rem 1rem;
 	cursor: pointer;
 	transition: background 0.15s;
-	border-bottom: 1px solid var(--grey-100, #f5f5f5);
+	border-block-end: 1px solid var(--grey-100, #f5f5f5);
 
-	&:last-child { border-bottom: none; }
+	&:last-child { border-block-end: none; }
 
 	&:hover { background: var(--grey-50, #fafafa); }
 
@@ -478,7 +478,7 @@ async function handleCreateVikunjaTask() {
 
 		.shopping-list__item-name {
 			text-decoration: line-through;
-			color: var(--grey-400, #bbb);
+			color: var(--grey-400, #bbbbbb);
 		}
 
 		.shopping-list__checkbox {
@@ -490,9 +490,9 @@ async function handleCreateVikunjaTask() {
 }
 
 .shopping-list__checkbox {
-	width: 1.25rem;
-	height: 1.25rem;
-	border: 2px solid var(--grey-300, #ddd);
+	inline-size: 1.25rem;
+	block-size: 1.25rem;
+	border: 2px solid var(--grey-300, #dddddd);
 	border-radius: 4px;
 	display: flex;
 	align-items: center;
@@ -505,7 +505,7 @@ async function handleCreateVikunjaTask() {
 .shopping-list__item-name {
 	flex: 1;
 	font-size: 0.875rem;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	transition: color 0.15s;
 }
 
@@ -513,7 +513,7 @@ async function handleCreateVikunjaTask() {
 	display: flex;
 	align-items: center;
 	gap: 0.4rem;
-	text-align: right;
+	text-align: end;
 }
 
 .shopping-list__item-tobuy {
@@ -524,7 +524,7 @@ async function handleCreateVikunjaTask() {
 
 .shopping-list__item-stock {
 	font-size: 0.72rem;
-	color: var(--grey-400, #bbb);
+	color: var(--grey-400, #bbbbbb);
 }
 
 // ── Transition ────────────────────────────────

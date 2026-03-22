@@ -8,7 +8,6 @@
 		</div>
 
 		<div class="task-defaults__body">
-
 			<!-- Priorité -->
 			<div class="task-defaults__field">
 				<label>Priorité par défaut</label>
@@ -63,7 +62,7 @@
 							placeholder="X jours"
 							class="task-defaults__input task-defaults__input--small"
 							@change="updateDefault({ dueDateOffsetDays: customDays })"
-						/>
+						>
 						<span class="task-defaults__due-label">jours</span>
 					</div>
 				</div>
@@ -110,7 +109,6 @@
 					D'autres assignés peuvent être ajoutés manuellement par tâche.
 				</p>
 			</div>
-
 		</div>
 
 		<!-- Footer -->
@@ -179,7 +177,7 @@ const PRIORITIES = [
 ]
 
 const DUE_OPTIONS = [
-	{ value: 0,  label: "Aujourd'hui" },
+	{ value: 0,  label: 'Aujourd\'hui' },
 	{ value: 1,  label: 'Demain' },
 	{ value: 3,  label: '3 jours' },
 	{ value: 7,  label: '1 semaine' },
@@ -193,13 +191,13 @@ const customDays = ref<number>(
 	store.defaults.dueDateOffsetDays !== null &&
 	!DUE_OPTIONS.some(o => o.value === store.defaults.dueDateOffsetDays)
 		? store.defaults.dueDateOffsetDays
-		: 7
+		: 7,
 )
 
 // ── Données Vikunja ───────────────────────────
 
 const availableLabels = computed(() =>
-	Object.values(labelStore.labels)
+	Object.values(labelStore.labels),
 )
 
 const currentUserId = computed(() => authStore.info?.id ?? 0)
@@ -220,17 +218,17 @@ function toggleLabel(id: number) {
 		current.splice(idx, 1)
 	}
 	store.update({ labels: current })
-  vikunjaSettings.saveTaskDefaults()
+	vikunjaSettings.saveTaskDefaults()
 }
 
 function updateDefault(partial: Parameters<typeof store.update>[0]) {
-  store.update(partial)
-  vikunjaSettings.saveTaskDefaults()
+	store.update(partial)
+	vikunjaSettings.saveTaskDefaults()
 }
 
 function resetDefaults() {
-  store.reset()
-  vikunjaSettings.saveTaskDefaults()
+	store.reset()
+	vikunjaSettings.saveTaskDefaults()
 }
 
 function toggleAssignee(id: number) {
@@ -242,7 +240,7 @@ function toggleAssignee(id: number) {
 		current.splice(idx, 1)
 	}
 	store.update({ assignees: current })
-  vikunjaSettings.saveTaskDefaults()
+	vikunjaSettings.saveTaskDefaults()
 }
 </script>
 
@@ -254,21 +252,21 @@ function toggleAssignee(id: number) {
 }
 
 .task-defaults__header {
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--grey-200, #e8e8e8);
-  margin-bottom: 1.5rem;
+  padding-block-end: 1rem;
+  border-block-end: 1px solid var(--grey-200, #e8e8e8);
+  margin-block-end: 1.5rem;
 
   h3 {
     font-size: 1rem;
     font-weight: 700;
     margin: 0 0 0.25rem;
-    color: var(--text, #fff);
+    color: var(--text, #ffffff);
   }
 }
 
 .task-defaults__subtitle {
   font-size: 0.82rem;
-  color: var(--grey-500, #888);
+  color: var(--grey-500, #888888);
   margin: 0;
 }
 
@@ -286,7 +284,7 @@ function toggleAssignee(id: number) {
   label {
     font-size: 0.78rem;
     font-weight: 600;
-    color: var(--grey-500, #888);
+    color: var(--grey-500, #888888);
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
@@ -303,9 +301,9 @@ function toggleAssignee(id: number) {
 .task-defaults__priority-btn {
   padding: 0.35rem 0.75rem;
   border-radius: 8px;
-  border: 1px solid var(--grey-300, #444);
+  border: 1px solid var(--grey-300, #444444);
   background: transparent;
-  color: var(--text, #fff);
+  color: var(--text, #ffffff);
   font-size: 0.82rem;
   cursor: pointer;
   transition: all 0.15s;
@@ -330,9 +328,9 @@ function toggleAssignee(id: number) {
 .task-defaults__due-btn {
   padding: 0.35rem 0.75rem;
   border-radius: 8px;
-  border: 1px solid var(--grey-300, #444);
+  border: 1px solid var(--grey-300, #444444);
   background: transparent;
-  color: var(--text, #fff);
+  color: var(--text, #ffffff);
   font-size: 0.82rem;
   cursor: pointer;
   transition: all 0.15s;
@@ -353,19 +351,19 @@ function toggleAssignee(id: number) {
 
 .task-defaults__due-label {
   font-size: 0.82rem;
-  color: var(--grey-500, #888);
+  color: var(--grey-500, #888888);
 }
 
 .task-defaults__input {
   padding: 0.35rem 0.6rem;
-  border: 1px solid var(--grey-300, #444);
+  border: 1px solid var(--grey-300, #444444);
   border-radius: 8px;
   background: rgba(255,255,255,0.05);
-  color: var(--text, #fff);
+  color: var(--text, #ffffff);
   font-size: 0.82rem;
   outline: none;
 
-  &--small { width: 70px; }
+  &--small { inline-size: 70px; }
   &:focus { border-color: var(--primary, #1973ff); }
 }
 
@@ -380,9 +378,9 @@ function toggleAssignee(id: number) {
 .task-defaults__tag {
   padding: 0.3rem 0.65rem;
   border-radius: 999px;
-  border: 1px solid var(--grey-300, #444);
+  border: 1px solid var(--grey-300, #444444);
   background: transparent;
-  color: var(--text, #fff);
+  color: var(--text, #ffffff);
   font-size: 0.78rem;
   cursor: pointer;
   transition: all 0.15s;
@@ -392,7 +390,7 @@ function toggleAssignee(id: number) {
 
 .task-defaults__empty {
   font-size: 0.78rem;
-  color: var(--grey-500, #888);
+  color: var(--grey-500, #888888);
   font-style: italic;
 }
 
@@ -406,9 +404,9 @@ function toggleAssignee(id: number) {
 .task-defaults__assignee-btn {
   padding: 0.35rem 0.75rem;
   border-radius: 8px;
-  border: 1px solid var(--grey-300, #444);
+  border: 1px solid var(--grey-300, #444444);
   background: transparent;
-  color: var(--text, #fff);
+  color: var(--text, #ffffff);
   font-size: 0.82rem;
   cursor: pointer;
   transition: all 0.15s;
@@ -423,16 +421,16 @@ function toggleAssignee(id: number) {
 
 .task-defaults__hint {
   font-size: 0.72rem;
-  color: var(--grey-500, #888);
+  color: var(--grey-500, #888888);
   margin: 0;
 }
 
 // ── Footer ────────────────────────────────────
 
 .task-defaults__footer {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--grey-200, #e8e8e8);
+  margin-block-start: 1.5rem;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid var(--grey-200, #e8e8e8);
   display: flex;
   align-items: center;
   justify-content: space-between;

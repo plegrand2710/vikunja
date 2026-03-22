@@ -59,7 +59,7 @@
 			<button
 				class="cal-toolbar__btn"
 				@click="emit('subscriptions')"
-				>
+			>
 				+ Abonnements
 			</button>
 		</div>
@@ -79,6 +79,7 @@ const emit = defineEmits<{
 	(e: 'next'): void
 	(e: 'today'): void
 	(e: 'refresh'): void
+	(e: 'subscriptions'): void
 }>()
 
 const store = useCalendarStore()
@@ -93,8 +94,8 @@ const sources = useCalendarSources()
 	flex-wrap: wrap;
 	gap: 0.75rem;
 	padding: 0 0 1rem;
-	border-bottom: 1px solid var(--grey-200, #e8e8e8);
-	margin-bottom: 1rem;
+	border-block-end: 1px solid var(--grey-200, #e8e8e8);
+	margin-block-end: 1rem;
 }
 
 .cal-toolbar__nav {
@@ -106,8 +107,8 @@ const sources = useCalendarSources()
 .cal-toolbar__title {
 	font-size: 1rem;
 	font-weight: 700;
-	color: var(--text, #333);
-	margin-left: 0.5rem;
+	color: var(--text, #333333);
+	margin-inline-start: 0.5rem;
 }
 
 .cal-toolbar__views {
@@ -126,14 +127,14 @@ const sources = useCalendarSources()
 	cursor: pointer;
 	font-size: 0.85rem;
 	font-weight: 500;
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 	transition: background 0.15s, color 0.15s;
 
 	&:hover { background: var(--grey-200, #e8e8e8); }
 
 	&.is-active {
 		background: white;
-		color: var(--text, #333);
+		color: var(--text, #333333);
 		box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 	}
 }
@@ -171,13 +172,13 @@ const sources = useCalendarSources()
 
 // Correction thème dark
 .cal-toolbar__title {
-  color: var(--text, #fff) !important;
+  color: var(--text, #ffffff) !important;
 }
 
 .cal-toolbar__btn:not(.cal-toolbar__btn--primary),
 .cal-toolbar__view-btn:not(.is-active) {
   background: rgba(255, 255, 255, 0.08) !important;
-  color: var(--text, #fff) !important;
+  color: var(--text, #ffffff) !important;
   border-color: rgba(255, 255, 255, 0.15) !important;
 }
 

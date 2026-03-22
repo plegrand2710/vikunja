@@ -8,7 +8,7 @@
 				type="text"
 				placeholder="🔍 Rechercher (nom, ingrédient, tag...)"
 				class="recipe-library__search"
-			/>
+			>
 
 			<!-- Actions -->
 			<div class="recipe-library__actions">
@@ -64,12 +64,24 @@
 				v-model="sortBy"
 				class="recipe-library__sort"
 			>
-				<option value="recent">Plus récents</option>
-				<option value="usage">Plus utilisés</option>
-				<option value="rating">Mieux notés</option>
-				<option value="alpha">Alphabétique</option>
-				<option value="calories_asc">Calories ↑</option>
-				<option value="calories_desc">Calories ↓</option>
+				<option value="recent">
+					Plus récents
+				</option>
+				<option value="usage">
+					Plus utilisés
+				</option>
+				<option value="rating">
+					Mieux notés
+				</option>
+				<option value="alpha">
+					Alphabétique
+				</option>
+				<option value="calories_asc">
+					Calories ↑
+				</option>
+				<option value="calories_desc">
+					Calories ↓
+				</option>
 			</select>
 
 			<!-- Filtre inventaire -->
@@ -177,7 +189,7 @@ const filteredRecipes = computed(() => {
 		list = list.filter(r =>
 			r.name.toLowerCase().includes(q) ||
 			r.tags.some(t => t.toLowerCase().includes(q)) ||
-			r.ingredients.some(i => i.name.toLowerCase().includes(q))
+			r.ingredients.some(i => i.name.toLowerCase().includes(q)),
 		)
 	}
 
@@ -256,7 +268,7 @@ function handleSaved(recipe: Recipe) {
 
 .recipe-library__search {
 	flex: 1;
-	min-width: 200px;
+	min-inline-size: 200px;
 	padding: 0.5rem 0.75rem;
 	border: 1px solid var(--grey-200, #e8e8e8);
 	border-radius: 8px;
@@ -384,7 +396,7 @@ function handleSaved(recipe: Recipe) {
 
 .recipe-library__count {
 	font-size: 0.8rem;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 	margin: 0;
 }
 
@@ -407,7 +419,7 @@ function handleSaved(recipe: Recipe) {
 .recipe-library__empty {
 	grid-column: 1 / -1;
 	text-align: center;
-	color: var(--grey-400, #bbb);
+	color: var(--grey-400, #bbbbbb);
 	font-size: 0.875rem;
 	padding: 3rem;
 }

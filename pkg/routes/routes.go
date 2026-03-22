@@ -645,6 +645,18 @@ func registerAPIRoutes(a *echo.Group) {
 	a.PUT("/subscriptions/:entity/:entityID", subscriptionHandler.CreateWeb)
 	a.DELETE("/subscriptions/:entity/:entityID", subscriptionHandler.DeleteWeb)
 
+	// Calendar Subscriptions (shared external calendars)
+	calendarSubscriptionHandler := &handler.WebHandler{
+		EmptyStruct: func() handler.CObject {
+			return &models.CalendarSubscription{}
+		},
+	}
+	a.GET("/calendar-subscriptions", calendarSubscriptionHandler.ReadAllWeb)
+	a.PUT("/calendar-subscriptions", calendarSubscriptionHandler.CreateWeb)
+	a.POST("/calendar-subscriptions/:id", calendarSubscriptionHandler.UpdateWeb)
+	a.DELETE("/calendar-subscriptions/:id", calendarSubscriptionHandler.DeleteWeb)
+	a.GET("/calendar-subscriptions/:id/events", apiv1.GetCalendarSubscriptionEvents)
+
 	// Notifications
 	notificationHandler := &handler.WebHandler{
 		EmptyStruct: func() handler.CObject {

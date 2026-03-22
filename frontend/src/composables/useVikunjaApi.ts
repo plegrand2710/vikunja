@@ -155,7 +155,7 @@ export function useVikunjaApi() {
 			apiFetch<VikunjaTask>('/tasks', {
 				method: 'PUT',
 				body: JSON.stringify(payload),
-			})
+			}),
 		)
 	}
 
@@ -220,7 +220,7 @@ export function useVikunjaApi() {
 					description,
 					project_id: project.id,
 					due_date: new Date(
-						today.getTime() + 7 * 24 * 60 * 60 * 1000
+						today.getTime() + 7 * 24 * 60 * 60 * 1000,
 					).toISOString(), // dans 7 jours
 				}),
 			})
@@ -230,7 +230,7 @@ export function useVikunjaApi() {
 	/** Récupère les tâches d'un projet */
 	async function getProjectTasks(projectId: number): Promise<VikunjaTask[]> {
 		const result = await withLoading(() =>
-			apiFetch<VikunjaTask[]>(`/projects/${projectId}/tasks`)
+			apiFetch<VikunjaTask[]>(`/projects/${projectId}/tasks`),
 		)
 		return result ?? []
 	}
@@ -241,7 +241,7 @@ export function useVikunjaApi() {
 			apiFetch<VikunjaTask>(`/tasks/${taskId}`, {
 				method: 'POST',
 				body: JSON.stringify({ done: true }),
-			})
+			}),
 		)
 	}
 

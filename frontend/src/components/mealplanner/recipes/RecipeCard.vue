@@ -18,7 +18,9 @@
 		</div>
 
 		<!-- Nom -->
-		<h3 class="recipe-card__name">{{ recipe.name }}</h3>
+		<h3 class="recipe-card__name">
+			{{ recipe.name }}
+		</h3>
 
 		<!-- Tags -->
 		<div
@@ -81,7 +83,7 @@ const emit = defineEmits<{
 const store = useMealPlannerStore()
 
 const isCookable = computed(() =>
-	store.cookableRecipes.some(r => r.id === props.recipe.id)
+	store.cookableRecipes.some(r => r.id === props.recipe.id),
 )
 
 function formatDate(dateStr: string): string {
@@ -95,7 +97,7 @@ function formatDate(dateStr: string): string {
 <style lang="scss" scoped>
 .recipe-card {
 	position: relative;
-	background: var(--white, #fff);
+	background: var(--white, #ffffff);
 	border: 1px solid var(--grey-200, #e8e8e8);
 	border-radius: 12px;
 	padding: 1rem;
@@ -140,7 +142,7 @@ function formatDate(dateStr: string): string {
 .recipe-card__name {
 	font-size: 0.95rem;
 	font-weight: 700;
-	color: var(--text, #333);
+	color: var(--text, #333333);
 	margin: 0;
 	line-height: 1.3;
 	display: -webkit-box;
@@ -158,7 +160,7 @@ function formatDate(dateStr: string): string {
 .recipe-card__tag {
 	font-size: 0.68rem;
 	background: var(--grey-100, #f5f5f5);
-	color: var(--grey-600, #666);
+	color: var(--grey-600, #666666);
 	padding: 0.1rem 0.4rem;
 	border-radius: 4px;
 }
@@ -167,14 +169,14 @@ function formatDate(dateStr: string): string {
 	display: flex;
 	gap: 0.6rem;
 	font-size: 0.75rem;
-	color: var(--grey-500, #888);
+	color: var(--grey-500, #888888);
 }
 
 .recipe-card__footer {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-top: auto;
+	margin-block-start: auto;
 }
 
 .recipe-card__rating {
@@ -183,13 +185,13 @@ function formatDate(dateStr: string): string {
 
 .recipe-card__usage {
 	font-size: 0.72rem;
-	color: var(--grey-400, #bbb);
+	color: var(--grey-400, #bbbbbb);
 }
 
 .recipe-card__cookable {
 	position: absolute;
-	top: 0.5rem;
-	right: 0.5rem;
+	inset-block-start: 0.5rem;
+	inset-inline-end: 0.5rem;
 	font-size: 0.65rem;
 	background: #d1fae5;
 	color: #065f46;
