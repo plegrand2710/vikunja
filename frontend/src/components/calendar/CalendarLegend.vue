@@ -26,6 +26,20 @@
 				⚠️
 			</span>
 		</button>
+
+		<button
+			v-for="sub in store.sharedSubscriptions"
+			:key="`sub-${sub.id}`"
+			class="cal-legend__item"
+			:class="{ 'is-disabled': !store.isSubscriptionEnabled(sub.id) }"
+			@click="handleToggleSubscription(sub.id)"
+		>
+			<span
+				class="cal-legend__dot"
+				:style="{ background: store.isSubscriptionEnabled(sub.id) ? sub.color : '#ccc' }"
+			/>
+			<span class="cal-legend__label">{{ sub.name }}</span>
+		</button>
 	</div>
 </template>
 
@@ -39,6 +53,11 @@ const vikunjaSettings = useVikunjaSettings()
 function handleToggleSource(id: Parameters<typeof store.toggleSource>[0]) {
 	store.toggleSource(id)
 	vikunjaSettings.saveSources()
+}
+
+function handleToggleSubscription(id: number) {
+	store.toggleSubscription(id)
+	vikunjaSettings.saveDisabledSubscriptions()
 }
 
 function formatSyncTime(isoDate: string): string {
